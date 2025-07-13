@@ -1,0 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Michroma&display=swap");
+
+* {
+  background-color: #605b5b;
+  color: #bcfd4c;
+}
+
+.homepage-banner {
+  padding-bottom: 20px;
+}
+
+.homepage-banner h2 {
+  font-family: "Michroma", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.homepage-banner button {
+  color: #2e2e2e;
+}
+
+.feature-panel {
+  display: flex;
+  flex-direction: row;
+  padding: 50px 20px;
+  gap: 65px;
+  width: fit-content;
+}
+
+.feature-panel img {
+  width: 400px;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 5%;
+}
