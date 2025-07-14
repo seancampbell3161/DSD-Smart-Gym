@@ -4,7 +4,7 @@ import boxingImage from "../assets/boxing-class.jpg";
 import workoutImage from "../assets/workout.jpg";
 import "../styles/homepage.css";
 
-const Homepage = () => {
+const Homepage: React.FC = () => {
   return (
     <div className="homepage">
       <div className="homepage-banner">
