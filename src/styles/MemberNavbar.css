@@ -1,0 +1,76 @@
+/* Navbar */
+.member-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(110, 110, 110, 0.8);
+  padding: 1.5rem 0;
+  height: 40px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  overflow: visible;
+}
+
+/* Container */
+.member-navbar-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* Left side */
+.member-navbar-left {
+  position: relative;
+  width: 80px;
+}
+
+.member-logo-img {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 150px; /* adjust as desired */
+  width: auto;
+}
+
+/* Remove portal text */
+.member-navbar-text {
+  display: none;
+}
+
+/* Nav links */
+.member-nav-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.member-nav-links li {
+  display: inline-flex;
+  align-items: center;
+}
+
+.member-nav-links a {
+  text-decoration: none;
+  color: #bcfd4c;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 5px 10px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  border-radius: 4px;
+}
+
+.member-nav-links a:hover {
+  background-color: rgba(188, 253, 76, 0.2);
+  color: #ffffff;
+}

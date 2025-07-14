@@ -1,35 +1,87 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 
-function App() {
-  const [count, setCount] = useState(0)
+// Layouts
+import Navbar from "./layout/navbar";
+import Footer from "./layout/footer";
+import MemberLayout from "./layout/memberLayout";
+
+// Pages
+import Home from "./pages/Home";
+import AdminPortal from "./pages/AdminPortal";
+import MemberPortal from "./pages/MemberPortal";
+import Profile from "./pages/Profile";
+import Classes from "./pages/Classes";
+import CafeOrdering from "./pages/CafeOrdering";
+
+// import "./styles/main.css";
+import "./styles/MemberNavbar.css";
+
+const AppContent: React.FC = () => {
+  const location = useLocation();
+  const isMemberRoute = location.pathname.startsWith("/member");
+
+  const publicNavItems = [
+    { label: "HOME", to: "/" },
+    { label: "Classes", to: "/class-list" },
+    { label: "Check In Status", to: "/check-in-status" },
+    { label: "Metric Card", to: "/metric-card" },
+    { label: "Cafe Ordering", to: "/cafe-ordering" },
+  ];
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+      {/* Render Navbar only outside of /member routes */}
+      {!isMemberRoute && <Navbar navItems={publicNavItems} />}
 
-export default App
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/admin" element={<AdminPortal />} />
+
+        {/* Member-only routes */}
+        <Route
+          path="/member"
+          element={
+            <MemberLayout>
+              <MemberPortal />
+            </MemberLayout>
+          }
+        />
+        <Route
+          path="/member/profile"
+          element={
+            <MemberLayout>
+              <Profile />
+            </MemberLayout>
+          }
+        />
+        <Route
+          path="/member/classes"
+          element={
+            <MemberLayout>
+              <Classes />
+            </MemberLayout>
+          }
+        />
+        <Route
+          path="/member/cafe-ordering"
+          element={
+            <MemberLayout>
+              <CafeOrdering />
+            </MemberLayout>
+          }
+        />
+      </Routes>
+
+      <Footer />
+    </>
+  );
+};
+
+const App = () => (
+  <Router>
+    <AppContent />
+  </Router>
+);
+
+export default App;
