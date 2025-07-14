@@ -1,8 +1,8 @@
-import yogaVideo from "../../assets/yoga.mp4";
-import posImage from "../../assets/pos.jpg";
-import boxingImage from "../../assets/boxing-class.jpg";
-import workoutImage from "../../assets/workout.jpg";
-import "./homepage.css";
+import yogaVideo from "../assets/yoga.mp4";
+import posImage from "../assets/pos.jpg";
+import boxingImage from "../assets/boxing-class.jpg";
+import workoutImage from "../assets/workout.jpg";
+import "../styles/homepage.css";
 
 const Homepage = () => {
   return (

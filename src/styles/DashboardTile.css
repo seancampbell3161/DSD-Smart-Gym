@@ -1,0 +1,146 @@
+/* reset any parent padding so hero truly spans edge-to-edge */
+.member-dashboard {
+  margin: 0;
+  padding: 0;
+}
+
+/* HERO */
+.hero-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;             /* full viewport height */
+  overflow: hidden;
+}
+
+.hero-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 140%;
+  object-fit: cover;        
+  object-position: center;
+  z-index: 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;                   
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+/* overlayed text + button */
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  text-align: center;
+  color: #c7ff59;
+  text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+  max-width: 90%;
+}
+
+.hero-text h1 {
+  font-size: 3.5rem;
+  margin: 0 0 1rem;
+}
+
+.hero-text p {
+  font-size: 1.25rem;
+  margin: 0 0 2rem;
+  color: #ffffff;
+}
+
+.hero-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: black;
+  color: #c7ff59;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.hero-button:hover {
+  background-color: #c7ff59;
+  color: black;
+}
+
+/* TILE GRID */
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 3rem auto;
+  padding: 0 2rem;
+  box-sizing: border-box;
+}
+
+/* INDIVIDUAL TILES */
+.dashboard-tile {
+  aspect-ratio: 1 / 1;             /* square */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #fff;
+  box-shadow: 0 0 12px #c7ff59;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.dashboard-tile:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 18px #c7ff59;
+}
+
+/* TILE LABEL BACKGROUND */
+.tile-title {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+/* MODAL (unchanged) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  position: relative;
+  text-align: center;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
