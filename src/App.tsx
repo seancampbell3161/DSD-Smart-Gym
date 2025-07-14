@@ -1,5 +1,11 @@
+// App.tsx
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 
 // Layouts
 import Navbar from "./layout/navbar";
@@ -7,14 +13,15 @@ import Footer from "./layout/footer";
 import MemberLayout from "./layout/memberLayout";
 
 // Pages
-import Home from "./pages/Home";
+import Homepage from "./pages/Homepage";
 import AdminPortal from "./pages/AdminPortal";
 import MemberPortal from "./pages/MemberPortal";
 import Profile from "./pages/Profile";
 import Classes from "./pages/Classes";
 import CafeOrdering from "./pages/CafeOrdering";
 
-// import "./styles/main.css";
+// Styles
+import "./styles/main.css";
 import "./styles/MemberNavbar.css";
 
 const AppContent: React.FC = () => {
@@ -23,19 +30,19 @@ const AppContent: React.FC = () => {
 
   const publicNavItems = [
     { label: "HOME", to: "/" },
-    { label: "Classes", to: "/class-list" },
-    { label: "Check In Status", to: "/check-in-status" },
-    { label: "Metric Card", to: "/metric-card" },
-    { label: "Cafe Ordering", to: "/cafe-ordering" },
+    { label: "CLASSES", to: "/classes" },
+    { label: "CHECK IN STATUS", to: "/check-in-status" },
+    { label: "METRIC CARD", to: "/metric-card" },
+    { label: "CAFE ORDERING", to: "/cafe-ordering" },
   ];
 
   return (
     <>
-      {/* Render Navbar only outside of /member routes */}
       {!isMemberRoute && <Navbar navItems={publicNavItems} />}
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* Public routes */}
+        <Route path="/" element={<Homepage />} />
         <Route path="/admin" element={<AdminPortal />} />
 
         {/* Member-only routes */}
@@ -78,7 +85,7 @@ const AppContent: React.FC = () => {
   );
 };
 
-const App = () => (
+const App: React.FC = () => (
   <Router>
     <AppContent />
   </Router>
