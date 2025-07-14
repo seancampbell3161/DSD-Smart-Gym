@@ -6,7 +6,7 @@ import "../styles/homepage.css";
 
 const Homepage = () => {
   return (
-    <>
+    <div className="homepage">
       <div className="homepage-banner">
         <h2>Smarter Fitness. Wherever You Are.</h2>
         <h3>Discover a smarter all-in-one health solution.</h3>
@@ -42,7 +42,7 @@ const Homepage = () => {
           </p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

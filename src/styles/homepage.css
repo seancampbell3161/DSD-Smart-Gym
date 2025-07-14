@@ -1,26 +1,42 @@
-@import url("https://fonts.googleapis.com/css2?family=Michroma&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Goldman:wght@400;700&family=Michroma&display=swap');
 
- .homepage-banner {
-  color: #bcfd4c;
+.homepage-banner {
+  position: absolute;
+  color: #acff1d;
   padding-bottom: 20px;
+  margin: 80px 40px;
 }
 
 .homepage-banner h2 {
-  font-family: "Michroma", sans-serif;
+  font-family: "Goldman", sans-serif;
   font-weight: 400;
+  font-size: 40px;
   font-style: normal;
+  -webkit-text-stroke: 0.25px rgb(237, 254, 192);
+  margin-bottom: 0;
+}
+
+.homepage-banner h3 {
+  margin: 0px 10px 22px 10px;
 }
 
 .homepage-banner button {
+  background-color: rgb(231, 234, 234);
   color: #2e2e2e;
+  font-weight: 800;
+  margin: auto 80px;
+}
+
+.homepage video {
+  width: 100%;
 }
 
 .feature-panel {
   display: flex;
   flex-direction: row;
-  padding: 50px 20px;
+  padding: 50px 75px;
   gap: 65px;
-  width: fit-content;
+  text-align: center;
 }
 
 .feature-panel img {
@@ -28,4 +44,4 @@
   height: 350px;
   object-fit: cover;
   border-radius: 5%;
-} 
+}
