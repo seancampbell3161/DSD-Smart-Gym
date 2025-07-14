@@ -23,7 +23,6 @@ const AppContent: React.FC = () => {
   const publicNav = [
     { label: "HOME", to: "/" },
     { label: "CLASSES", to: "/classes" },
-    { label: "CHECK IN STATUS", to: "/check-in-status" },
     { label: "METRIC CARD", to: "/metric-card" },
     { label: "CAFE ORDERING", to: "/cafe-ordering" },
   ];
