@@ -45,15 +45,16 @@ const MemberPortal: React.FC = () => {
           onClick={() => navigate("/member/profile")}
           backgroundImage={ProfileImage}
         />
+        
+        <DashboardTile
+          title="Check-In"
+          onClick={() => setShowQRModal(true)}
+          backgroundImage={QRImage}
+        />
         <DashboardTile
           title="Check-in Status"
           onClick={() => navigate("/member/checkinstatus")}
           backgroundImage={CheckInImage}
-        />
-        <DashboardTile
-          title="QR Code"
-          onClick={() => setShowQRModal(true)}
-          backgroundImage={QRImage}
         />
         <DashboardTile
           title="Metrics"

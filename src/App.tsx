@@ -1,34 +1,26 @@
-// App.tsx
+// src/App.tsx
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useLocation,
-} from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 
-// Layouts
-import Navbar from "./layout/navbar";
-import Footer from "./layout/footer";
-import MemberLayout from "./layout/memberLayout";
+// Layouts & Navbars
+import Navbar        from "./layout/navbar";
+import MemberNavbar  from "./layout/memberNavbar";
+import Footer        from "./layout/footer";
+import MemberLayout  from "./layout/memberLayout";
 
 // Pages
-import Homepage from "./pages/Homepage";
-import AdminPortal from "./pages/AdminPortal";
-import MemberPortal from "./pages/MemberPortal";
-import Profile from "./pages/Profile";
-import Classes from "./pages/Classes";
-import CafeOrdering from "./pages/CafeOrdering";
-
-// Styles
-import "./styles/main.css";
-import "./styles/MemberNavbar.css";
+import Homepage      from "./pages/Homepage";
+import AdminPortal   from "./pages/AdminPortal";
+import MemberPortal  from "./pages/MemberPortal";
+import Profile       from "./pages/Profile";
+import Classes       from "./pages/Classes";
+import CafeOrdering  from "./pages/CafeOrdering";
 
 const AppContent: React.FC = () => {
   const location = useLocation();
-  const isMemberRoute = location.pathname.startsWith("/member");
+  const isMember = location.pathname.startsWith("/member");
 
-  const publicNavItems = [
+  const publicNav = [
     { label: "HOME", to: "/" },
     { label: "CLASSES", to: "/classes" },
     { label: "CHECK IN STATUS", to: "/check-in-status" },
@@ -36,16 +28,25 @@ const AppContent: React.FC = () => {
     { label: "CAFE ORDERING", to: "/cafe-ordering" },
   ];
 
+  const memberNav = [
+    { label: "Home", to: "/member" },
+    { label: "Classes", to: "/member/classes" },
+    { label: "Cafe", to: "/member/cafe-ordering" },
+  ];
+
   return (
     <>
-      {!isMemberRoute && <Navbar navItems={publicNavItems} />}
+      {isMember
+        ? <MemberNavbar navItems={memberNav} />
+        : <Navbar       navItems={publicNav} />
+      }
 
       <Routes>
-        {/* Public routes */}
-        <Route path="/" element={<Homepage />} />
-        <Route path="/admin" element={<AdminPortal />} />
+        {/* public */}
+        <Route path="/"        element={<Homepage />} />
+        <Route path="/admin"   element={<AdminPortal />} />
 
-        {/* Member-only routes */}
+        {/* member */}
         <Route
           path="/member"
           element={
@@ -85,10 +86,6 @@ const AppContent: React.FC = () => {
   );
 };
 
-const App: React.FC = () => (
-  <Router>
-    <AppContent />
-  </Router>
-);
+const App: React.FC = () => <AppContent />;
 
 export default App;

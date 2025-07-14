@@ -1,10 +1,14 @@
-import { BrowserRouter } from 'react-router'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+// src/main.tsx
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import "./index.css";           // global vars, body, buttons, etc.
 
-createRoot(document.getElementById('root')!).render(
+const container = document.getElementById("root");
+if (!container) throw new Error("No #root element");
+
+createRoot(container).render(
   <BrowserRouter>
     <App />
-  </BrowserRouter>,
-)
+  </BrowserRouter>
+);

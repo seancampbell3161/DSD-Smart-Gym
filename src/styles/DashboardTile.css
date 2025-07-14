@@ -17,15 +17,15 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  object-fit: cover;         /* cover entire area */
-  object-position: 50% 20%;
+  height: 140%;
+  object-fit: cover;        
+  object-position: center;
   z-index: 1;
 }
 
 .hero-overlay {
   position: absolute;
-  inset: 0;                   /* top/left/right/bottom = 0 */
+  inset: 0;                   
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 2;
 }

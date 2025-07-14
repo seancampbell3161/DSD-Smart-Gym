@@ -1,11 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Michroma&display=swap");
 
-* {
-  background-color: #605b5b;
+ .homepage-banner {
   color: #bcfd4c;
-}
-
-.homepage-banner {
   padding-bottom: 20px;
 }
 
@@ -32,4 +28,4 @@
   height: 350px;
   object-fit: cover;
   border-radius: 5%;
-}
+} 
