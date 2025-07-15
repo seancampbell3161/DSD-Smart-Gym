@@ -10,9 +10,7 @@ import MemberLayout  from "./layout/memberLayout";
 
 // Pages
 import Homepage      from "./pages/Homepage";
-import AdminPortal   from "./pages/AdminPortal";
 import MemberPortal  from "./pages/MemberPortal";
-import Profile       from "./pages/Profile";
 import Classes       from "./pages/Classes";
 import CafeOrdering  from "./pages/CafeOrdering";
 
@@ -44,7 +42,6 @@ const AppContent: React.FC = () => {
       <Routes>
         {/* public */}
         <Route path="/"        element={<Homepage />} />
-        <Route path="/admin"   element={<AdminPortal />} />
 
         {/* member */}
         <Route
@@ -52,14 +49,6 @@ const AppContent: React.FC = () => {
           element={
             <MemberLayout>
               <MemberPortal />
-            </MemberLayout>
-          }
-        />
-        <Route
-          path="/member/profile"
-          element={
-            <MemberLayout>
-              <Profile />
             </MemberLayout>
           }
         />
