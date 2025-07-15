@@ -18,13 +18,6 @@ const AppContent: React.FC = () => {
   const location = useLocation();
   const isMember = location.pathname.startsWith("/member");
 
-  const publicNav = [
-    { label: "HOME", to: "/" },
-    { label: "CLASSES", to: "/classes" },
-    { label: "METRIC CARD", to: "/metric-card" },
-    { label: "CAFE ORDERING", to: "/cafe-ordering" },
-  ];
-
   const memberNav = [
     { label: "Home", to: "/member" },
     { label: "Classes", to: "/member/classes" },
@@ -35,7 +28,7 @@ const AppContent: React.FC = () => {
     <>
       {isMember
         ? <MemberNavbar navItems={memberNav} />
-        : <Navbar       navItems={publicNav} />
+        : <Navbar />
       }
 
       <Routes>
