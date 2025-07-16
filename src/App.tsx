@@ -10,23 +10,14 @@ import MemberLayout  from "./layout/memberLayout";
 
 // Pages
 import Homepage      from "./pages/Homepage";
-import AdminPortal   from "./pages/AdminPortal";
 import MemberPortal  from "./pages/MemberPortal";
-import Profile       from "./pages/Profile";
 import Classes       from "./pages/Classes";
 import CafeOrdering  from "./pages/CafeOrdering";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const AppContent: React.FC = () => {
   const location = useLocation();
   const isMember = location.pathname.startsWith("/member");
-
-  const publicNav = [
-    { label: "HOME", to: "/" },
-    { label: "CLASSES", to: "/classes" },
-    { label: "CHECK IN STATUS", to: "/check-in-status" },
-    { label: "METRIC CARD", to: "/metric-card" },
-    { label: "CAFE ORDERING", to: "/cafe-ordering" },
-  ];
 
   const memberNav = [
     { label: "Home", to: "/member" },
@@ -38,13 +29,12 @@ const AppContent: React.FC = () => {
     <>
       {isMember
         ? <MemberNavbar navItems={memberNav} />
-        : <Navbar       navItems={publicNav} />
+        : <Navbar />
       }
 
       <Routes>
         {/* public */}
-        <Route path="/"        element={<Homepage />} />
-        <Route path="/admin"   element={<AdminPortal />} />
+        <Route path="/" element={<Homepage />} />
 
         {/* member */}
         <Route
@@ -52,14 +42,6 @@ const AppContent: React.FC = () => {
           element={
             <MemberLayout>
               <MemberPortal />
-            </MemberLayout>
-          }
-        />
-        <Route
-          path="/member/profile"
-          element={
-            <MemberLayout>
-              <Profile />
             </MemberLayout>
           }
         />
@@ -79,6 +61,8 @@ const AppContent: React.FC = () => {
             </MemberLayout>
           }
         />
+
+        <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
 
       <Footer />
