@@ -13,6 +13,7 @@ import Homepage      from "./pages/Homepage";
 import MemberPortal  from "./pages/MemberPortal";
 import Classes       from "./pages/Classes";
 import CafeOrdering  from "./pages/CafeOrdering";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const AppContent: React.FC = () => {
   const location = useLocation();
@@ -33,7 +34,7 @@ const AppContent: React.FC = () => {
 
       <Routes>
         {/* public */}
-        <Route path="/"        element={<Homepage />} />
+        <Route path="/" element={<Homepage />} />
 
         {/* member */}
         <Route
@@ -60,6 +61,8 @@ const AppContent: React.FC = () => {
             </MemberLayout>
           }
         />
+
+        <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
 
       <Footer />
