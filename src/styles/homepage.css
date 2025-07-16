@@ -1,29 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Goldman:wght@400;700&family=Michroma&display=swap');
 
 .homepage-banner {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   color: #acff1d;
   padding-bottom: 20px;
-  margin: 80px 40px;
+  margin: 380px 450px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .homepage-banner h2 {
   font-family: "Goldman", sans-serif;
-  font-weight: 400;
+  font-weight: 700;
   font-size: 40px;
   font-style: normal;
-  -webkit-text-stroke: 0.25px rgb(237, 254, 192);
+  -webkit-text-stroke: 1px rgb(0, 0, 0);
   margin-bottom: 0;
 }
 
 .homepage-banner h3 {
   margin: 0px 10px 22px 10px;
+  font-weight: 800;
+  color: whitesmoke;
+  -webkit-text-stroke: 1.5px rgb(0, 0, 0);
 }
 
 .login-container {
   z-index: 1;
   position: relative;
-  background-color: rgb(231, 234, 234);
   color: #2e2e2e;
   font-weight: 800;
   width: 330px;
