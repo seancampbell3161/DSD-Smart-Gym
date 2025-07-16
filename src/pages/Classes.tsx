@@ -50,7 +50,6 @@ const [backgroundImage, setBackgroundImage] = useState<string | null>(gym);
 
   return (
     <div
-      className='classes-page'
       style={{
         backgroundImage: backgroundImage ? `url(${backgroundImage})`: gym ,
         backgroundSize: "cover",
