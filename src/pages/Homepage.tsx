@@ -6,34 +6,58 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Accordion from 'react-bootstrap/Accordion';
 import "../styles/homepage.css";
+import { useState } from "react";
+
+
 
 const Homepage: React.FC = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    // TODO: Add fetch request and handle payload
+    setEmail('');
+    setPassword('');
+  }
+
   return (
     <div className="homepage">
       <div className="homepage-banner">
         <h2>Smarter Fitness. Wherever You Are.</h2>
         <h3>Discover a smarter all-in-one health solution.</h3>
-      <Accordion className="login-container">
-      <Accordion.Item eventKey="0">
-        <Accordion.Header>Log into your smart experience</Accordion.Header>
-        <Accordion.Body>
-          <Form>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" placeholder="Enter email" />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="Password" />
-          </Form.Group>
-          <Button variant="dark" type="submit" id="submit-button">
-            Log in
-          </Button>
-        </Form>   
-        </Accordion.Body>
-      </Accordion.Item>
-    </Accordion>
-       
+        <Accordion className="login-container">
+          <Accordion.Item eventKey="0">
+            <Accordion.Header>Log into your smart experience</Accordion.Header>
+            <Accordion.Body>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <Form.Label>Email address</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter email"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                    value={email}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                    value={password}
+                    required
+                  />
+                </Form.Group>
+                <Button variant="dark" type="submit" id="submit-button">
+                  Log in
+                </Button>
+              </Form>   
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>     
       </div>
       <video autoPlay muted loop>
         <source src={yogaVideo} type="video/mp4" />
