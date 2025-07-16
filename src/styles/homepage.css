@@ -20,11 +20,28 @@
   margin: 0px 10px 22px 10px;
 }
 
-.homepage-banner button {
+.login-container {
+  z-index: 1;
+  position: relative;
   background-color: rgb(231, 234, 234);
   color: #2e2e2e;
   font-weight: 800;
-  margin: auto 80px;
+  width: 330px;
+  margin-left: 50px;
+}
+
+.login-container button:first-child:hover {
+  background-color: #c3c5c0;
+}
+
+.login-container #submit-button {
+  margin-left: 105px
+}
+
+.homepage-banner div {
+  z-index: 1;
+  position: relative;
+  background-color: rgb(231, 234, 234);
 }
 
 .homepage video {

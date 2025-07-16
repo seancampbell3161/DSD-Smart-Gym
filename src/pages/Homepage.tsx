@@ -2,6 +2,9 @@ import yogaVideo from "../assets/yoga.mp4";
 import posImage from "../assets/pos.jpg";
 import boxingImage from "../assets/boxing-class.jpg";
 import workoutImage from "../assets/workout.jpg";
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Accordion from 'react-bootstrap/Accordion';
 import "../styles/homepage.css";
 
 const Homepage: React.FC = () => {
@@ -10,7 +13,27 @@ const Homepage: React.FC = () => {
       <div className="homepage-banner">
         <h2>Smarter Fitness. Wherever You Are.</h2>
         <h3>Discover a smarter all-in-one health solution.</h3>
-        <button>Join The Movement</button>
+      <Accordion className="login-container">
+      <Accordion.Item eventKey="0">
+        <Accordion.Header>Log into your smart experience</Accordion.Header>
+        <Accordion.Body>
+          <Form>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Email address</Form.Label>
+            <Form.Control type="email" placeholder="Enter email" />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Password</Form.Label>
+            <Form.Control type="password" placeholder="Password" />
+          </Form.Group>
+          <Button variant="dark" type="submit" id="submit-button">
+            Log in
+          </Button>
+        </Form>   
+        </Accordion.Body>
+      </Accordion.Item>
+    </Accordion>
+       
       </div>
       <video autoPlay muted loop>
         <source src={yogaVideo} type="video/mp4" />
