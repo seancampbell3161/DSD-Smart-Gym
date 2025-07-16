@@ -1,0 +1,6 @@
+.page-wrapper {
+  transition: background-image 0.4s ease;
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+}
