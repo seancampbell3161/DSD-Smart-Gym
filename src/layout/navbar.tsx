@@ -1,24 +1,17 @@
 import React from "react";
+import '../styles/MemberNavbar.css';
+import '../styles/HomepageNavBar.css';
+import Logo from '../assets/SG_Icon2.png';
 
-interface NavItem {
-  label: string;
-  to: string;
-}
 
-interface NavbarProps {
-  navItems: NavItem[];
-}
-
-const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
+const Navbar: React.FC = () => {
   return (
-    <nav>
-      <ul>
-        {navItems.map((item) => (
-          <li key={item.to}>
-            <a href={item.to}>{item.label}</a>
-          </li>
-        ))}
-      </ul>
+    <nav className="member-navbar">
+      <div className="member-navbar-container">
+        <div className="member-navbar-left">
+          <img className="member-logo-img homepage-logo" src={Logo}/>
+        </div>
+      </div>
     </nav>
   );
 };

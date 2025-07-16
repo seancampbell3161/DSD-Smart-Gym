@@ -6,7 +6,7 @@
   width: 100%;
   background-color: rgba(110, 110, 110, 0.2);
   padding: 1.5rem 0;
-  height: 30px;
+  height: 80px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   backdrop-filter: blur(4px);
