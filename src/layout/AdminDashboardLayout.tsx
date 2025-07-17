@@ -3,7 +3,7 @@ interface AdminDashboardProps {
 }
 
 const AdminDashboardLayout: React.FC<AdminDashboardProps> = () => {
-  return <></>;
+  return <h2>Dashboard</h2>;
 };
 
 export default AdminDashboardLayout;
