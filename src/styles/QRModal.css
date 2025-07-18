@@ -1,26 +1,63 @@
-.modal-overlay {
+/* overlay/backdrop */
+.modal-overlay,
+.qr-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0,0,0,0.8);
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2000;
+  z-index: 2;
 }
 
-.modal-content {
+/* square modal box */
+.modal-content,
+.qr-modal-content {
+  /* force a square */
+  width: 360px;
+  height: 360px;
+
   background: #fff;
   padding: 2rem;
   border-radius: 12px;
+  box-shadow: 0 0 20px #c7ff59;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   text-align: center;
   position: relative;
-  box-shadow: 0 0 20px #c7ff59;
 }
 
-.close-btn {
+/* fallback for very small screens */
+@media (max-width: 400px) {
+  .modal-content,
+  .qr-modal-content {
+    width: 90vw;
+    height: 90vw;
+  }
+}
+
+/* heading spacing */
+.modal-content h2,
+.qr-modal-content h2 {
+  margin: 0 0 1rem;
+}
+
+/* QR code sizing & centering */
+.modal-content img,
+.qr-modal-content img {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  margin-top: auto;
+}
+
+/* close-button styling (if you’re using .close-btn or .qr-close-button) */
+.close-btn,
+.qr-close-button {
   margin-top: 1rem;
   background-color: #c7ff59;
   border: none;

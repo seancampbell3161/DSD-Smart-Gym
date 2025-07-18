@@ -49,7 +49,7 @@ const MemberPortal: React.FC = () => {
             >
               ✕
             </button>
-            <h2>Your Check-In QR Code</h2>
+            <h2>Check-In</h2>
             <QRCodeCanvas
               value="https://smartgym.com/api/checkin?token=12345"
               size={200}
