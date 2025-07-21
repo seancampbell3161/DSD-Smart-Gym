@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import type { TimeOptions } from "../../types/TimeOptions";
-import type { coordinateProps } from "../../types/Analytics.interfaces";
+import type { TimeOptions, coordinateProps } from "../../types/Analytics.interface.ts";
 import TimePeriodButtons from "./TimePeriodButtons";
 import MetricCard from "./MetricCard";
 import SingleLineChart from "./SingleLineChart";
 
 
 const MembershipGrowth: React.FC = () => {
-  const [timePeriod, setTimePeriod] = useState<TimeOptions>("monthly");
+  const [timePeriod, setTimePeriod] = useState<TimeOptions>({button: "Monthly", tableHeader: "Month"});
   const [countData, setCountData] = useState<coordinateProps[]>([]);
+
 
   // interface ApiResponse {
   //   _id: string;
@@ -78,14 +78,14 @@ const MembershipGrowth: React.FC = () => {
   useEffect(() => {
     // TODO: Get all members & wrap in higher order function
     // const members = fetchAllMembers();
-    switch (timePeriod) {
-    case "yearly":
+    switch (timePeriod.button) {
+    case "Yearly":
        countMembersByYear();
        break;
-    case "monthly":
+    case "Monthly":
       countMembersByMonth();
       break;
-    case "weekly":
+    case "Weekly":
       countMembersByWeek();
       break;
     }
@@ -97,7 +97,7 @@ const MembershipGrowth: React.FC = () => {
         timePeriod={timePeriod}
         setTimePeriod={setTimePeriod}
       />
-      <MetricCard />
+      <MetricCard title={"Membership Growth"} timeInterval={timePeriod.tableHeader} data={countData}/>
       <SingleLineChart data={countData} />
     </>
   );

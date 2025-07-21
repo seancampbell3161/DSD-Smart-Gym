@@ -1,7 +1,7 @@
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import "../../styles/TimePeriodButtons.css";
-import type { TimeOptions } from "../../types/TimeOptions";
+import type { TimeOptions } from "../../types/Analytics.interface.ts";
 
 interface TimePeriodButtonProps {
   timePeriod: TimeOptions;
@@ -15,23 +15,23 @@ const TimePeriodButtons: React.FC<TimePeriodButtonProps> = ({
   return (
     <ButtonGroup aria-label="Basic example">
       <Button
-        className={timePeriod === "yearly" ? "selected" : ""}
+        className={timePeriod.button === "Yearly" ? "selected" : ""}
         variant="secondary"
-        onClick={() => setTimePeriod("yearly")}
+        onClick={() => setTimePeriod({button: "Yearly", tableHeader: "Year"})}
       >
         Yearly
       </Button>
       <Button
-        className={timePeriod === "monthly" ? "selected" : ""}
+        className={timePeriod.button === "Monthly" ? "selected" : ""}
         variant="secondary"
-        onClick={() => setTimePeriod("monthly")}
+        onClick={() => setTimePeriod({button: "Monthly", tableHeader: "Month"})}
       >
         Monthly
       </Button>
       <Button
-        className={timePeriod === "weekly" ? "selected" : ""}
+        className={timePeriod.button === "Weekly" ? "selected" : ""}
         variant="secondary"
-        onClick={() => setTimePeriod("weekly")}
+        onClick={() => setTimePeriod({button: "Weekly", tableHeader: "Week"})}
       >
         Weekly
       </Button>

@@ -1,5 +1,5 @@
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
-import type { coordinateProps } from '../../types/Analytics.interfaces';
+import type { coordinateProps } from '../../types/Analytics.interface';
 
 const SingleLineChart: React.FC<{data: coordinateProps[]}> = ({data}) => {
   return (
