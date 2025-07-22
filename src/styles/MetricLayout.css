@@ -1,0 +1,26 @@
+.metric-layout {
+  display: grid;
+  row-gap: 10px;
+  column-gap: 35px;
+  grid-template-areas:
+    "header header"
+    "none ."
+    "main sidebar";
+}
+
+.metric-title {
+  grid-area: header;
+  justify-self: center;
+}
+
+.time-period-buttons {
+  margin-left: 30px
+}
+
+.graph {
+  grid-area: main;
+}
+
+.metric-card {
+  grid-area: sidebar;
+}

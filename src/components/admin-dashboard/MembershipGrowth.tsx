@@ -3,6 +3,7 @@ import type { TimeOptions, coordinateProps } from "../../types/Analytics.interfa
 import TimePeriodButtons from "./TimePeriodButtons";
 import MetricCard from "./MetricCard";
 import SingleLineChart from "./SingleLineChart";
+import MetricLayout from "../../layout/MetricLayout.tsx";
 
 
 const MembershipGrowth: React.FC = () => {
@@ -93,12 +94,18 @@ const MembershipGrowth: React.FC = () => {
 
   return (
     <>
-      <TimePeriodButtons
+      <MetricLayout
+        title={"Membership Growth"}
+        buttonGroup={<TimePeriodButtons timePeriod={timePeriod} setTimePeriod={setTimePeriod} />}
+        metricCard={<MetricCard title={"Membership Growth"} timeInterval={timePeriod.tableHeader} data={countData} />}
+        graph={<SingleLineChart data={countData} />}
+      />
+      {/* <TimePeriodButtons
         timePeriod={timePeriod}
         setTimePeriod={setTimePeriod}
       />
       <MetricCard title={"Membership Growth"} timeInterval={timePeriod.tableHeader} data={countData}/>
-      <SingleLineChart data={countData} />
+      <SingleLineChart data={countData} /> */}
     </>
   );
 };
