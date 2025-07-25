@@ -1,5 +1,16 @@
+.homepage-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  background: rgba(0,0,0,0.2); 
+  z-index: 10;                    
+}
+
 .homepage-logo {
   top: 15px;
-  left: -250px;
-  position: absolute;
+  height: 140px;                  
 }
