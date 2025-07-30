@@ -1,0 +1,95 @@
+#peak-hours-title {
+  text-align: center;
+}
+
+.heatmap {
+  display: grid;
+  grid-gap: 5px;
+  align-items: start;
+}
+
+.container .map-row {
+  display: grid;
+  grid-gap: 5px;
+}
+
+.horizontal {
+  max-width: 900px;
+  grid-template-rows: repeat(8, 1fr);
+}
+
+.horizontal .map-row {
+  display: grid;
+  grid-template-columns: repeat(19, 1fr);
+}
+
+.horizontal .cells .label {
+  text-align: left;
+}
+
+.cell {
+  height: 30px;
+  width: 100%;
+  position: relative;
+  background: hsl(196deg 36% 95%);
+}
+
+.cell div {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  top: 10%;
+}
+
+.label {
+  text-align: center;
+  height: 15px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.x-axis {
+  position: relative;
+  left: 5%;
+}
+
+.tooltip {
+  display: none;
+}
+
+.cell:hover .tooltip {
+  position: absolute;
+  display: contents;
+}
+
+.cell:hover .tooltip span {
+  display: block;
+  position: relative;
+  z-index: 1;
+  font-size: 14px;
+  background: white;
+}
+
+.legend {
+  position: absolute;
+  width: 100%;
+  left: 50%;
+  margin-top: 30px;
+  max-width: 300px;
+  text-align: center;
+}
+
+.legend .cell {
+  height: 15px;
+  width: 100%;
+}
+
+.legend .labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+
+.legend span {
+  font-size: 16px;
+}
