@@ -2,11 +2,11 @@ interface AdminDashboardProps {
   children: React.ReactElement;
 }
 
-const AdminDashboardLayout: React.FC<AdminDashboardProps> = ({children}) => {
+const AdminDashboardLayout: React.FC<AdminDashboardProps> = ({ children }) => {
   return (
     <>
-    <h2>Dashboard</h2>
-    {children}
+      <h2 className="dashboard-header">Dashboard</h2>
+      {children}
     </>
   );
 };

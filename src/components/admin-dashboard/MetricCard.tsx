@@ -1,11 +1,15 @@
 import type { MetricCardProps } from "../../types/MetricCard.interface";
+import "../../styles/MetricCard.css";
 
-
-const MetricCard: React.FC<MetricCardProps> = ({ title, timeInterval, data }) => {
+const MetricCard: React.FC<MetricCardProps> = ({
+  title,
+  timeInterval,
+  data,
+}) => {
   return (
-    <>
+    <div className="membership-growth-metric-card">
       <h3>{title}</h3>
-      <table /* className="row" */>
+      <table>
         <thead>
           <tr>
             <th>{timeInterval}</th>
@@ -13,20 +17,18 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, timeInterval, data }) =>
           </tr>
         </thead>
         <tbody>
-          {
-            data.map(entry => {
-              return (
-                <tr>
-                  <td>{entry.x}</td>
-                  <td>{entry.y}</td>
-                </tr>
-              )
-            })
-          }
+          {data.map((entry) => {
+            return (
+              <tr>
+                <td>{entry.x}</td>
+                <td>{entry.y}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
-    </>
-  )
-}
+    </div>
+  );
+};
 
 export default MetricCard;

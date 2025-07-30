@@ -19,11 +19,11 @@ const Analytics: React.FC = () => {
       // Add a slider w/ rechart to scroll through all years
 
   return (
-    <>
+    <div className="analytics-container">
       <MembershipGrowth />
       <ClassAttendance />
       <PeakHours />
-    </>
+    </div>
   )
 }
 

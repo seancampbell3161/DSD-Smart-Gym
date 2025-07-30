@@ -1,7 +1,13 @@
 .metric-layout {
+  width: 90%;
+  padding: 40px;
+  background-color: white;
+  border-radius: 5%;
+  box-shadow: rgba(0, 0, 0, 0.568) 0px 5px 100px;
   display: grid;
   row-gap: 10px;
-  column-gap: 35px;
+  column-gap: 90px;
+  justify-content: center;
   grid-template-areas:
     "header header"
     "none ."
@@ -14,13 +20,20 @@
 }
 
 .time-period-buttons {
-  margin-left: 30px
+  justify-self: start;
+  margin: 0 70px 10px 70px;
 }
 
 .graph {
+  margin: auto 0;
+  justify-self: stretch;
   grid-area: main;
+  height: 400px;
+  width: 900px;
 }
 
 .metric-card {
   grid-area: sidebar;
+  width: 300px;
+  transform: translateX(-10%);
 }

@@ -14,8 +14,6 @@ interface GridCells {
   };
 }
 
-
-
 const PeakHoursMap: React.FC = () => {
   const [gridCells, setGridCells] = useState<GridCells>({});
   const minMaxCount = useRef<number[]>([]);
@@ -91,11 +89,16 @@ const PeakHoursMap: React.FC = () => {
       return yAxisLabels.reduce((days, dayLabel: string) => {
         const dayAndHour = xAxisLabels.reduce(
           (hours: { dayHour: string }[], hourLabel: string) => {
-            const count = formattedData[dayLabel]?.reduce((total: number, hour: string) => {
-              return hour === hourLabel ? total + 1 : total;
-            }, 0);
+            const count = formattedData[dayLabel]?.reduce(
+              (total: number, hour: string) => {
+                return hour === hourLabel ? total + 1 : total;
+              },
+              0
+            );
 
-            if (count) {minMaxCount.current = [...minMaxCount.current, count];}
+            if (count) {
+              minMaxCount.current = [...minMaxCount.current, count];
+            }
 
             console.log(count);
 
@@ -123,35 +126,35 @@ const PeakHoursMap: React.FC = () => {
   }, []);
 
   const generateBackgroundColor = (count: number) => {
-  return `hsl(196deg 36% ${count > 0 ? 95 - count * 5 : 95}%)`;
-};
+    return `hsl(90deg 100% ${count > 0 ? 95 - count * 5 : 95}%)`;
+  };
 
-function generateLegend(data: number[]) {
-  const deduped = [...new Set(data)];
-  const minValue = Math.min(...deduped);
-  const maxValue = Math.max(...deduped);
-  const minColor = generateBackgroundColor(minValue);
-  const maxColor = generateBackgroundColor(maxValue);
+  function generateLegend(data: number[]) {
+    const deduped = [...new Set(data)];
+    const minValue = Math.min(...deduped);
+    const maxValue = Math.max(...deduped);
+    const minColor = generateBackgroundColor(minValue);
+    const maxColor = generateBackgroundColor(maxValue);
+
+    return (
+      <>
+        <div className="legend-title">Hourly Check-ins</div>
+        <div
+          className="cell"
+          style={{
+            background: `linear-gradient(90deg, ${minColor} 0%, ${maxColor} 100%)`,
+          }}
+        />
+        <div className="labels">
+          <span className="label">Min: {minValue}</span>
+          <span className="label">Max: {maxValue}</span>
+        </div>
+      </>
+    );
+  }
 
   return (
-    <div className="legend">
-      <div className="legend-title">Hourly Check-ins</div>
-      <div
-        className="cell"
-        style={{
-          background: `linear-gradient(90deg, ${minColor} 0%, ${maxColor} 100%)`,
-        }}
-      />
-      <div className="labels">
-        <span className="label">Min: {minValue}</span>
-        <span className="label">Max: {maxValue}</span>
-      </div>
-    </div>
-  );
-}
-
-  return (
-    <div className="container">
+    <div className="heatmap-container">
       <div className={`heatmap horizontal`}>
         {Object.keys(gridCells).map((day: string) => (
           <div key={day} className="cells map-row">
@@ -162,9 +165,9 @@ function generateLegend(data: number[]) {
                 className="cell"
                 style={{ backgroundColor: generateBackgroundColor(count) }}
               >
-                <div>{count > 0 ? count: ""}</div>
+                <div>{count > 0 ? count : ""}</div>
                 <div className="tooltip" role="tooltip">
-                  <span>{count === 0 || count === undefined ? 0 : count }</span>
+                  <span>{count === 0 || count === undefined ? 0 : count}</span>
                   <span>{dayHour}</span>
                 </div>
               </div>
@@ -179,7 +182,7 @@ function generateLegend(data: number[]) {
           ))}
         </div>
       </div>
-      {generateLegend(minMaxCount.current)}
+      <div className="legend">{generateLegend(minMaxCount.current)}</div>
     </div>
   );
 };

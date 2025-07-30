@@ -1,11 +1,12 @@
 import type { ClassAttendanceMetricCardProps } from "../../types/ClassAttendance.interface";
+import "../../styles/ClassAttendanceMetricCard.css";
 
 const ClassAttendanceMetricCard: React.FC<ClassAttendanceMetricCardProps> = ({
   title,
   data,
 }) => {
   return (
-    <>
+    <div className="class-attendance-metric-card">
       <h3>{title}</h3>
       <table>
         <thead>
@@ -31,7 +32,7 @@ const ClassAttendanceMetricCard: React.FC<ClassAttendanceMetricCardProps> = ({
           })}
         </tbody>
       </table>
-    </>
+    </div>
   );
 };
 

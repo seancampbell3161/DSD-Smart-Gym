@@ -1,15 +1,15 @@
-import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
-import type { coordinateProps } from '../../types/Analytics.interface';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import type { coordinateProps } from "../../types/Analytics.interface";
 
-const SingleLineChart: React.FC<{data: coordinateProps[]}> = ({data}) => {
+const SingleLineChart: React.FC<{ data: coordinateProps[] }> = ({ data }) => {
   return (
-  <LineChart width={600} height={500} data={data}>
-    <CartesianGrid />
-    <Line dataKey="y" />
-    <XAxis dataKey="x" />
-    <YAxis />
-  </LineChart>
-  )
+    <AreaChart width={900} height={400} data={data}>
+      <CartesianGrid />
+      <Area dataKey="y" stroke="#bcfd4c" fill="#bcfd4c" />
+      <XAxis dataKey="x" />
+      <YAxis />
+    </AreaChart>
+  );
 };
 
-export default SingleLineChart
+export default SingleLineChart;
