@@ -1,101 +1,81 @@
 // components/Modals/QRModal.tsx
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
-import Logo from "../../assets/SG_Icon2.png";
-import "../../styles/QRModal.css";
 
 interface QRModalProps {
   isOpen: boolean;
   onClose: () => void;
-  userId: string;
   gymId: string;
+  token: string;
 }
 
-const QRModal: React.FC<QRModalProps> = ({
-  isOpen,
-  onClose,
-  userId,
-  gymId,
-  
-}) => {
-  const [qrToken, setQrToken] = useState<string>("");
-  const [expiresAt, setExpiresAt] = useState<string>("");
+const QRModal: React.FC<QRModalProps> = ({ isOpen, onClose, gymId, token }) => {
+  const [qrCodeValue, setQrCodeValue] = useState<string>("");
 
   useEffect(() => {
     if (!isOpen) return;
 
-    (async () => {
+    const fetchQRCode = async () => {
       try {
-        const res = await fetch(
-          `${window.location.origin}/api/qr-token`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              user_id: userId,
-              gym_id: gymId,
-            }),
-          }
-        );
-        if (res.ok) {
-          const { qr_token, expires_at } = await res.json();
-          setQrToken(qr_token);
-          setExpiresAt(expires_at);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/access/generateQRCode`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ gym_id: gymId }),
+        });
+
+        const data = await res.json();
+        if (res.ok && data.qrCode) {
+          setQrCodeValue(data.qrCode.qr_code); // from backend structure
         } else {
-          console.error("QR token generation failed:", await res.text());
+          alert(data.error || "Failed to generate QR code.");
         }
       } catch (err) {
-        console.error("Error generating QR token:", err);
+        console.error("QR Code fetch error:", err);
+        alert("Error generating QR code.");
       }
-    })();
-  }, [isOpen, userId, gymId]);
+    };
 
-  if (!isOpen) return null;
+    fetchQRCode();
+  }, [isOpen, gymId, token]);
 
-  const qrSize = 200;
-  const logoSize = 50;
+  const handleCheckInOut = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/access/checkInOut`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ gym_id: gymId }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert(data.message);
+      } else {
+        alert(data.error || "Check-in/out failed.");
+      }
+    } catch (err) {
+      console.error("Check-in/out error:", err);
+      alert("Error during check-in/out.");
+    }
+  };
 
   return (
-    <div className="qr-modal-overlay" onClick={onClose}>
-      <div
-        className="qr-modal-content"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          className="qr-close-button"
-          onClick={onClose}
-        >
-          ✕
-        </button>
-        <h2>Your Access QR Code</h2>
-
-        {qrToken ? (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="close-btn" onClick={onClose}>✕</button>
+        <h2>Check-In</h2>
+        {qrCodeValue ? (
           <>
-            <div
-              className="qr-code-wrapper"
-              style={{ width: qrSize, height: qrSize }}
-            >
-              <QRCodeCanvas
-                value={qrToken}
-                size={qrSize}
-              />
-              <img
-                src={Logo}
-                alt="logo"
-                className="qr-logo"
-                style={{
-                  width: logoSize,
-                  height: logoSize,
-                }}
-              />
-            </div>
-            <p>
-              Expires at:{" "}
-              {new Date(expiresAt).toLocaleString()}
-            </p>
+            <QRCodeCanvas value={qrCodeValue} size={200} />
+            <button className="checkin-btn" onClick={handleCheckInOut}>Check In/Out</button>
           </>
         ) : (
-          <p>Generating QR code…</p>
+          <p>Loading QR Code...</p>
         )}
       </div>
     </div>

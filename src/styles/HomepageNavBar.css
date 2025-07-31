@@ -1,16 +1,73 @@
-.homepage-navbar {
+/* Navbar */
+.public-navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1rem 2rem;
+  background-color: rgba(110, 110, 110, 0.2);
+  padding: 1.5rem 0;
+  height: 80px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  overflow: visible;
+}
+
+/* Container */
+.public-navbar-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  background: rgba(0,0,0,0.2); 
-  z-index: 10;                    
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* Logo Area */
+.public-navbar-left {
+  position: relative;
+  width: 80px;
 }
 
 .homepage-logo {
-  top: 15px;
-  height: 140px;                  
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 150px;
+  width: auto;
+}
+
+/* Right side (nav links) */
+.public-navbar-right {}
+
+.public-nav-menu {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.public-nav-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.public-nav-link {
+  text-decoration: none;
+  color: #bcfd4c;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 5px 10px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  border-radius: 4px;
+}
+
+.public-nav-link:hover {
+  background-color: rgba(188, 253, 76, 0.2);
+  color: #ffffff;
 }
