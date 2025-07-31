@@ -1,49 +1,48 @@
-/* Navbar */
 .public-navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background-color: rgba(110, 110, 110, 0.2);
-  padding: 1.5rem 0;
-  height: 80px;
+  background-color: rgba(110, 110, 110, 0.60); /* less dark, still transparent */
+  height: 80px; /* ✅ static height like member navbar */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 0; /* reset padding here for consistency */
   overflow: visible;
 }
 
-/* Container */
+/* Container (aligns logo and nav links properly) */
 .public-navbar-container {
-  max-width: 1200px;
+  max-width: 1280px;
   width: 100%;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 100%; /* match navbar height */
   padding: 0 20px;
   box-sizing: border-box;
 }
 
-/* Logo Area */
+/* Logo wrapper */
 .public-navbar-left {
   position: relative;
   width: 80px;
 }
 
-.homepage-logo {
+/* Logo image (centered inside navbar height) */
+.public-navbar-left img {
   position: absolute;
-  top: 40%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: 150px;
+  height: 140px; /* ✅ static size, won’t stretch navbar */
   width: auto;
 }
 
-/* Right side (nav links) */
-.public-navbar-right {}
-
+/* Nav menu */
 .public-nav-menu {
   display: flex;
   gap: 1.5rem;
@@ -59,15 +58,16 @@
 
 .public-nav-link {
   text-decoration: none;
-  color: #bcfd4c;
+  color: #b0ff36;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   padding: 5px 10px;
-  transition: color 0.3s ease, background-color 0.3s ease;
   border-radius: 4px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  font-family: "Goldman", sans-serif;
 }
 
 .public-nav-link:hover {
-  background-color: rgba(188, 253, 76, 0.2);
-  color: #ffffff;
+  background-color: rgba(176, 255, 54, 0.2);
+  color: white;
 }

@@ -1,11 +1,8 @@
 import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
-// Layouts & Navbars
-import Navbar from "./layout/navbar";
-import NonMemberLayout from "./layout/NonMemberLayout";
-import MemberNavbar from "./layout/memberNavbar";
-import Footer from "./layout/footer";
+// Layouts
+import NonMemberLayout from "./layout/nonMemberLayout";
 import MemberLayout from "./layout/memberLayout";
 
 // Pages
@@ -15,32 +12,23 @@ import Classes from "./pages/Classes";
 import CafeOrdering from "./pages/CafeOrdering";
 import AdminDashboard from "./pages/AdminDashboard";
 
+// Global Footer
+import Footer from "./layout/footer";
+
+const nonMemberNav = [
+  { label: "Home", to: "/" },
+  { label: "Classes", to: "/nonmember/classes" }
+];
+
 const AppContent: React.FC = () => {
-  const location = useLocation();
-  const isMember = location.pathname.startsWith("/member");
-  const isNonMember = location.pathname.startsWith("/nonmember") || location.pathname === "/";
-
-  const memberNav = [
-    { label: "Home", to: "/member" },
-    { label: "Classes", to: "/member/classes" },
-    { label: "Cafe", to: "/member/cafe-ordering" },
-  ];
-
-  const nonMemberNav = [
-    { label: "Classes", to: "/nonmember/classes" }, // ✅ ONLY this
-  ];
-
   return (
     <>
-      {isMember && <MemberNavbar navItems={memberNav} />}
-      {isNonMember && <Navbar navItem={nonMemberNav} />}
-
       <Routes>
-        {/* Public Homepage (with non-member navbar) */}
+        {/* Public Homepage */}
         <Route
           path="/"
           element={
-            <NonMemberLayout>
+            <NonMemberLayout navItems={nonMemberNav}>
               <Homepage />
             </NonMemberLayout>
           }
@@ -50,13 +38,13 @@ const AppContent: React.FC = () => {
         <Route
           path="/nonmember/classes"
           element={
-            <NonMemberLayout>
+            <NonMemberLayout navItems={nonMemberNav}>
               <Classes />
             </NonMemberLayout>
           }
         />
 
-        {/* Member Routes */}
+        {/* Member Portal */}
         <Route
           path="/member"
           element={
@@ -82,7 +70,7 @@ const AppContent: React.FC = () => {
           }
         />
 
-        {/* Admin */}
+        {/* Admin Dashboard */}
         <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
 

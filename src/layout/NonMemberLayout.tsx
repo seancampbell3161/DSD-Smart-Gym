@@ -1,21 +1,24 @@
-import React from 'react';
-import Navbar from '../layout/navbar';
+import React from "react";
+import Navbar from "./navbar";
+
+interface NavItem {
+  label: string;
+  to: string;
+}
 
 interface NonMemberLayoutProps {
   children: React.ReactNode;
+  navItems: NavItem[];
 }
 
-const NonMemberLayout: React.FC<NonMemberLayoutProps> = ({ children }) => {
-  const navItem = [
-    { label: "Classes", to: "/nonmember/classes" } // ✅ also fix route spelling here
-  ];
-
+const NonMemberLayout: React.FC<NonMemberLayoutProps> = ({
+  children,
+  navItems,
+}) => {
   return (
     <>
-      <Navbar navItem={navItem} />
-      <main style={{ paddingTop: "100px" }}>
-        {children}
-      </main>
+      <Navbar navItem={navItems} />
+      {children}
     </>
   );
 };

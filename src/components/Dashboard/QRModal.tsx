@@ -1,4 +1,3 @@
-// components/Modals/QRModal.tsx
 import React, { useEffect, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 
@@ -11,12 +10,16 @@ interface QRModalProps {
 
 const QRModal: React.FC<QRModalProps> = ({ isOpen, onClose, gymId, token }) => {
   const [qrCodeValue, setQrCodeValue] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (!isOpen) return;
 
     const fetchQRCode = async () => {
       try {
+        console.log("📤 Sending token:", token);
+        console.log("📤 Sending gym ID:", gymId);
+
         const res = await fetch(`${import.meta.env.VITE_API_URL}/access/generateQRCode`, {
           method: "POST",
           headers: {
@@ -27,14 +30,28 @@ const QRModal: React.FC<QRModalProps> = ({ isOpen, onClose, gymId, token }) => {
         });
 
         const data = await res.json();
-        if (res.ok && data.qrCode) {
-          setQrCodeValue(data.qrCode.qr_code); // from backend structure
-        } else {
-          alert(data.error || "Failed to generate QR code.");
+        console.log("📦 QR FETCH RESPONSE:", data);
+
+        if (!res.ok) {
+          throw new Error(data.error || "Failed to generate QR code.");
         }
-      } catch (err) {
+
+        const rawQr = data.qrCode;
+
+        if (typeof rawQr === "string") {
+          setQrCodeValue(rawQr); // case: qrCode is string
+        } else if (typeof rawQr === "object" && rawQr.qr_code) {
+          setQrCodeValue(rawQr.qr_code); // case: qrCode.qr_code
+        } else {
+          console.error("❌ Unexpected QR structure:", data);
+          throw new Error("QR code missing or malformed.");
+        }
+
+        setLoading(false);
+      } catch (err: any) {
         console.error("QR Code fetch error:", err);
-        alert("Error generating QR code.");
+        alert(err.message || "Error generating QR code.");
+        setLoading(false);
       }
     };
 
@@ -54,7 +71,7 @@ const QRModal: React.FC<QRModalProps> = ({ isOpen, onClose, gymId, token }) => {
 
       const data = await res.json();
       if (res.ok) {
-        alert(data.message);
+        alert(data.message || "Check-in/out successful.");
       } else {
         alert(data.error || "Check-in/out failed.");
       }
@@ -69,7 +86,7 @@ const QRModal: React.FC<QRModalProps> = ({ isOpen, onClose, gymId, token }) => {
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="close-btn" onClick={onClose}>✕</button>
         <h2>Check-In</h2>
-        {qrCodeValue ? (
+        {!loading && qrCodeValue ? (
           <>
             <QRCodeCanvas value={qrCodeValue} size={200} />
             <button className="checkin-btn" onClick={handleCheckInOut}>Check In/Out</button>

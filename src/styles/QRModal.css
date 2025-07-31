@@ -66,3 +66,21 @@
   border-radius: 8px;
   cursor: pointer;
 }
+.logout-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 10;
+  transition: background 0.3s ease;
+}
+
+.logout-button:hover {
+  background: #e60000;
+}

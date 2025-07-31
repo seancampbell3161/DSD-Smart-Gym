@@ -9,6 +9,7 @@ import Form from "react-bootstrap/Form";
 import Accordion from "react-bootstrap/Accordion";
 import "../styles/homepage.css";
 import "../styles/HomepageNavbar.css";
+import ApiHandler from "../utils/ApiHandler"; 
 
 const Homepage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -20,37 +21,20 @@ const Homepage: React.FC = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/users/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || data.message || "Login failed");
-      }
+      const data = await ApiHandler.login(email, password); 
 
       const token = data.authToken;
       const gym_id = data.gym_id;
 
-      if (!token) {
-        throw new Error("No token received from server");
-      }
-
-      if (!gym_id) {
-        throw new Error("No gym ID received from server");
+      if (!token || !gym_id) {
+        throw new Error("Missing login credentials from server");
       }
 
       localStorage.setItem("token", token);
       localStorage.setItem("gym_id", gym_id);
       setMessage("✅ Logged in successfully!");
-
       setEmail("");
       setPassword("");
-
-      // Redirect to member portal
       navigate("/member");
     } catch (err: any) {
       console.error("Login error:", err);
@@ -75,7 +59,7 @@ const Homepage: React.FC = () => {
                     type="email"
                     placeholder="Enter email"
                     value={email}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </Form.Group>
@@ -86,7 +70,7 @@ const Homepage: React.FC = () => {
                     type="password"
                     placeholder="Password"
                     value={password}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                   />
                 </Form.Group>
@@ -111,8 +95,7 @@ const Homepage: React.FC = () => {
           <img alt="two guys exercising" src={workoutImage} />
           <h3>Insights That Power Performance.</h3>
           <p>
-            Turn data into deeper engagement. Our analytics help you create a
-            gym experience that feels personal and community-driven.
+            Turn data into deeper engagement. Our analytics help you create a gym experience that feels personal and community-driven.
           </p>
         </div>
 
@@ -120,8 +103,7 @@ const Homepage: React.FC = () => {
           <img alt="boxing class" src={boxingImage} />
           <h3>Sweat Together. Get Stronger.</h3>
           <p>
-            Getting fit the smart way. Our intuitive class management makes it
-            easy for members to build a routine that works for them.
+            Getting fit the smart way. Our intuitive class management makes it easy for members to build a routine that works for them.
           </p>
         </div>
 
@@ -129,9 +111,7 @@ const Homepage: React.FC = () => {
           <img alt="transaction taking place" src={posImage} />
           <h3>Fast Checkouts. Smarter Business.</h3>
           <p>
-            Streamline sales with a smart, built-in POS system—manage café
-            orders, track inventory, and process payments effortlessly, all from
-            one place.
+            Streamline sales with a smart, built-in POS system—manage café orders, track inventory, and process payments effortlessly, all from one place.
           </p>
         </div>
       </div>
