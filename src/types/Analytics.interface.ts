@@ -1,7 +1,6 @@
-export type TimeOptions = 
-{button: "Yearly", tableHeader: "Year"} |
-{button: "Monthly", tableHeader: "Month"} |
-{button: "Weekly" , tableHeader: "Week"} ;
+export type TimeOptions =
+  | { button: "Yearly"; tableHeader: "Year" }
+  | { button: "Monthly"; tableHeader: "Month" };
 
 export interface coordinateProps {
   x: string;

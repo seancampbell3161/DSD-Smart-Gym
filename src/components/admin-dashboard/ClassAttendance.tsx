@@ -69,8 +69,6 @@ const ClassAttendance: React.FC = () => {
     setCountData(data);
   };
 
-  const countMembersByWeek = () => {};
-
   useEffect(() => {
     switch (timePeriod.button) {
       case "Yearly":
@@ -78,9 +76,6 @@ const ClassAttendance: React.FC = () => {
         break;
       case "Monthly":
         countMembersByMonth();
-        break;
-      case "Weekly":
-        countMembersByWeek();
         break;
     }
   }, [timePeriod]);

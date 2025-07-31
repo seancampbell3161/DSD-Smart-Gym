@@ -17,23 +17,18 @@ const TimePeriodButtons: React.FC<TimePeriodButtonProps> = ({
       <Button
         className={timePeriod.button === "Yearly" ? "selected" : ""}
         variant="secondary"
-        onClick={() => setTimePeriod({button: "Yearly", tableHeader: "Year"})}
+        onClick={() => setTimePeriod({ button: "Yearly", tableHeader: "Year" })}
       >
         Yearly
       </Button>
       <Button
         className={timePeriod.button === "Monthly" ? "selected" : ""}
         variant="secondary"
-        onClick={() => setTimePeriod({button: "Monthly", tableHeader: "Month"})}
+        onClick={() =>
+          setTimePeriod({ button: "Monthly", tableHeader: "Month" })
+        }
       >
         Monthly
-      </Button>
-      <Button
-        className={timePeriod.button === "Weekly" ? "selected" : ""}
-        variant="secondary"
-        onClick={() => setTimePeriod({button: "Weekly", tableHeader: "Week"})}
-      >
-        Weekly
       </Button>
     </ButtonGroup>
   );
