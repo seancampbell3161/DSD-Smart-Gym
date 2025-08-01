@@ -2,6 +2,8 @@ import { useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import Modal from "../Modal/modal";
+import Alert from 'react-bootstrap/Alert';
+import '../../styles/Classes.css'
 
 interface ClassEvent {
   id: string;
@@ -176,6 +178,9 @@ export default function Calendar() {
   const [classes, setClasses] = useState<ClassEvent[]>(initialClasses);
   const [selectedClass, setSelectedClass] = useState<ClassEvent | null>(null);
   const [modalMode, setModalMode] = useState<"signup" | "waitlist" | null>(null);
+  const [alertMessage, setAlertMessage] = useState('');
+const [alertVariant, setAlertVariant] = useState<'success' | 'danger' | 'warning' | 'info'>('success');
+const [showAlert, setShowAlert] = useState(false);
 
   const calendarEvents = classes.map((cls) => ({
     id: cls.id,
@@ -215,17 +220,20 @@ export default function Calendar() {
             : item
         )
       );
-      alert("You are registered!");
-    } else if (modalMode === "waitlist") {
-      const existingClass = classes.find((cls) => cls.id === selectedClass.id);
-      if (!existingClass) return;
+      setAlertMessage("You are registered!");
+    setAlertVariant("success");
+    setShowAlert(true);
+  } else if (modalMode === "waitlist") {
+    const existingClass = classes.find((cls) => cls.id === selectedClass.id);
+    if (!existingClass) return;
 
       const isAlreadyOnWaitlist = existingClass.waitlist?.includes(name);
 
       if (isAlreadyOnWaitlist) {
-        const position = existingClass.waitlist?.indexOf(name)! + 1;
-        alert(`You are already on the waitlist.\nYour position: #${position}`);
-      } else {
+      const position = existingClass.waitlist?.indexOf(name)! + 1;
+      setAlertMessage(`You are already on the waitlist.\nYour position: #${position}`);
+      setAlertVariant("warning");
+    } else {
         setClasses((prev) =>
           prev.map((item) =>
             item.id === selectedClass.id
@@ -233,12 +241,17 @@ export default function Calendar() {
               : item
           )
         );
-        alert(`${name} has been added to the waitlist.`);
-      }
+          setAlertMessage(`${name} has been added to the waitlist.`);
+      setAlertVariant("info");
     }
+    setShowAlert(true);
+  }
 
-    handleModalClose();
-  };
+  handleModalClose();
+
+  // Optional: auto-hide alert after 3s
+  setTimeout(() => setShowAlert(false), 3000);
+};
 
   return (
     <div style={{
@@ -266,6 +279,15 @@ export default function Calendar() {
         classTitle={selectedClass?.title || ""}
         waitlistLength={selectedClass?.waitlist?.length || 0}
         />
+       {showAlert && (
+  <div className="alert-overlay">
+    <div className="alert-wrapper">
+      <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>
+        {alertMessage}
+      </Alert>
+    </div>
+  </div>
+)}
     </div>
   );
 }
