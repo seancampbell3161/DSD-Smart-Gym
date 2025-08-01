@@ -26,7 +26,7 @@
   box-sizing: border-box;
 }
 
-/* Left side */
+
 .member-navbar-left {
   position: relative;
   width: 80px;
@@ -37,16 +37,16 @@
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: 150px; /* adjust as desired */
+  height: 150px; 
   width: auto;
 }
 
-/* Remove portal text */
+
 .member-navbar-text {
   display: none;
 }
 
-/* Nav links */
+
 .member-nav-links {
   display: flex;
   gap: 1.5rem;

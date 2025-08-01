@@ -1,15 +1,34 @@
 import React from "react";
-import '../styles/MemberNavbar.css';
-import '../styles/HomepageNavBar.css';
-import Logo from '../assets/SG_Icon2.png';
+import { Link } from "react-router-dom";
+import "../styles/HomepageNavBar.css";
+import Logo from "../assets/SG_Icon2.png";
 
+interface NavItem {
+  label: string;
+  to: string;
+}
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  navItem: NavItem[];
+}
+
+const Navbar: React.FC<NavbarProps> = ({ navItem }) => {
   return (
-    <nav className="member-navbar">
-      <div className="member-navbar-container">
-        <div className="member-navbar-left">
-          <img className="member-logo-img homepage-logo" src={Logo}/>
+    <nav className="public-navbar">
+      <div className="public-navbar-container">
+        <div className="public-navbar-left">
+          <img className="homepage-logo" src={Logo} alt="Smart Gym Logo" />
+        </div>
+        <div className="public-navbar-right">
+          <ul className="public-nav-menu">
+            {navItem.map((item, index) => (
+              <li key={index} className="public-nav-item">
+                <Link to={item.to} className="public-nav-link">
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </nav>
