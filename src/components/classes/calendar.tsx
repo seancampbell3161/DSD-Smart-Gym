@@ -171,8 +171,6 @@ const userEvents: UserEvent[] = [
   }
 ];
 
-console.log(userEvents)
-
 
 export default function Calendar() {
   const [classes, setClasses] = useState<ClassEvent[]>(initialClasses);
