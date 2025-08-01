@@ -14,7 +14,6 @@ type Props = {
 
 export default function ClassList({classes, setBackgroundImg}: Props) {
 
-
   return (
     <div className='class-list'>
       {classes.map((item, index) =>(
