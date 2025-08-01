@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.18",
+    "@fullcalendar/daygrid": "^6.1.18",
+    "@fullcalendar/react": "^6.1.18",
     "bootstrap": "^5.3.7",
     "qrcode.react": "^4.2.0",
     "react": "^19.1.0",

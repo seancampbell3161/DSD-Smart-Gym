@@ -1,4 +1,3 @@
-import React from 'react'
 import '../../styles/ClassList.css';
 
 type ClassItem = {
@@ -14,7 +13,6 @@ type Props = {
 };
 
 export default function ClassList({classes, setBackgroundImg}: Props) {
-
 
   return (
     <div className='class-list'>
