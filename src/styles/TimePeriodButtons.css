@@ -1,0 +1,8 @@
+.selected {
+  background-color: rgb(166, 255, 0);
+  color: black;
+}
+
+.selected:hover {
+  background-color: rgb(166, 255, 0);
+}
