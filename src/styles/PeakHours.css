@@ -1,3 +1,22 @@
+.yearly-range-container {
+  position: relative;
+  left: 220px;
+  margin: 30px 0 20px 0;
+  width: 50%;
+  display: flex;
+  justify-content: start;
+}
+
+.invalid-year {
+  width: 350px;
+  border-radius: 5%;
+  text-align: center;
+  align-content: center;
+  background-color: rgb(255, 209, 209);
+  border: 1px solid red;
+  color: red;
+}
+
 .peak-hours-container {
   width: 90%;
   padding: 40px;
