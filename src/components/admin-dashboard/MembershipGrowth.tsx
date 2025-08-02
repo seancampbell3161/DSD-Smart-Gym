@@ -7,6 +7,8 @@ import TimePeriodButtons from "./TimePeriodButtons";
 import MetricCard from "./MetricCard";
 import SingleLineChart from "./SingleLineChart";
 import MetricLayout from "../../layout/MetricLayout.tsx";
+import YearlyRange from "./YearlyRange.tsx";
+import YearlyComparison from "./YearComparison.tsx";
 
 const MembershipGrowth: React.FC = () => {
   const [timePeriod, setTimePeriod] = useState<TimeOptions>({
@@ -14,6 +16,9 @@ const MembershipGrowth: React.FC = () => {
     tableHeader: "Month",
   });
   const [countData, setCountData] = useState<coordinateProps[]>([]);
+  const [invalidYearFormat, setInvalidYearFormat] = useState<boolean>(false);
+
+  const pattern: RegExp = /^\d{4}$/;
 
   // interface ApiResponse {
   //   _id: string;
@@ -93,6 +98,20 @@ const MembershipGrowth: React.FC = () => {
     <>
       <MetricLayout
         title={"Membership Growth"}
+        timeOptionInputs={
+          timePeriod.button === "Yearly" ? (
+            <YearlyRange
+              pattern={pattern}
+              setInvalidYearFormat={setInvalidYearFormat}
+            />
+          ) : (
+            <YearlyComparison
+              pattern={pattern}
+              setInvalidYearFormat={setInvalidYearFormat}
+            />
+          )
+        }
+        invalidYearFormat={invalidYearFormat}
         buttonGroup={
           <TimePeriodButtons
             timePeriod={timePeriod}

@@ -20,8 +20,24 @@
 }
 
 .time-period-buttons {
+  display: flex;
   justify-self: start;
-  margin: 0 70px 10px 70px;
+  column-gap: 10px;
+  margin: 10px 70px 0px 70px;
+}
+
+.time-period-buttons input {
+  text-align: center;
+}
+
+.invalid-year {
+  width: 350px;
+  border-radius: 5%;
+  text-align: center;
+  align-content: center;
+  background-color: rgb(255, 209, 209);
+  border: 1px solid red;
+  color: red;
 }
 
 .graph {

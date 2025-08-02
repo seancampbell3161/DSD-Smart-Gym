@@ -6,3 +6,8 @@ export interface coordinateProps {
   x: string;
   y: number;
 }
+
+export interface InvalidYearFormatProps {
+  pattern: RegExp;
+  setInvalidYearFormat: React.Dispatch<React.SetStateAction<boolean>>;
+}
