@@ -5,6 +5,8 @@ import TimePeriodButtons from "./TimePeriodButtons";
 import ClassAttendanceMetricCard from "./ClassAttendanceMetricCard.tsx";
 import MetricLayout from "../../layout/MetricLayout.tsx";
 import ClassAttwnsanceChart from "./ClassAttendanceChart.tsx";
+import YearlyRange from "./YearlyRange.tsx";
+import SingleYearSelector from "./SingleYearSelector.tsx";
 
 const ClassAttendance: React.FC = () => {
   const [timePeriod, setTimePeriod] = useState<TimeOptions>({
@@ -12,6 +14,9 @@ const ClassAttendance: React.FC = () => {
     tableHeader: "Month",
   });
   const [countData, setCountData] = useState<ClassDataProps[]>([]);
+  const [invalidYearFormat, setInvalidYearFormat] = useState<boolean>(false);
+
+  const pattern: RegExp = /^\d{4}$/;
 
   const countMembersByYear = () => {
     const data = [
@@ -84,6 +89,17 @@ const ClassAttendance: React.FC = () => {
     <>
       <MetricLayout
         title={"Class Attendance"}
+        timeOptionInputs={
+          timePeriod.button === "Yearly" ? (
+            <YearlyRange
+              pattern={pattern}
+              setInvalidYearFormat={setInvalidYearFormat}
+            />
+          ) : (
+            <SingleYearSelector pattern={pattern} setInvalidYearFormat={setInvalidYearFormat}/>
+          )
+        }
+        invalidYearFormat={invalidYearFormat}        
         buttonGroup={
           <TimePeriodButtons
             timePeriod={timePeriod}
