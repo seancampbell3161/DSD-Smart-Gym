@@ -1,0 +1,111 @@
+.peak-hours-container {
+  width: 90%;
+  padding: 40px;
+  background-color: white;
+  border-radius: 5%;
+  box-shadow: rgba(0, 0, 0, 0.568) 0px 5px 80px;
+}
+
+.heatmap-container {
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+  column-gap: 50px;
+}
+
+#peak-hours-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.heatmap {
+  display: grid;
+  grid-gap: 5px;
+  align-items: start;
+}
+
+.heatmap-container .map-row {
+  display: grid;
+  grid-gap: 5px;
+}
+
+.horizontal {
+  max-width: 900px;
+  grid-template-rows: repeat(8, 1fr);
+}
+
+.horizontal .map-row {
+  display: grid;
+  grid-template-columns: repeat(19, 1fr);
+}
+
+.horizontal .cells .label {
+  text-align: left;
+}
+
+.cell {
+  height: 30px;
+  width: 40px;
+  position: relative;
+  background: hsl(196deg 36% 95%);
+}
+
+.cell div {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  top: 10%;
+}
+
+.label {
+  text-align: center;
+  height: 15px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.x-axis {
+  position: relative;
+  left: 5%;
+}
+
+.tooltip {
+  display: none;
+}
+
+.cell:hover .tooltip {
+  position: absolute;
+  display: contents;
+}
+
+.cell:hover .tooltip span {
+  display: block;
+  position: relative;
+  z-index: 1;
+  font-size: 14px;
+  background: white;
+}
+
+.legend {
+  width: 100%;
+  left: 50%;
+  margin-top: 30px;
+  max-width: 300px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.legend .cell {
+  height: 15px;
+  width: 100%;
+}
+
+.legend .labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+
+.legend span {
+  font-size: 16px;
+}
