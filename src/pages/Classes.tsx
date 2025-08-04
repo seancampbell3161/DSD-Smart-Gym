@@ -12,7 +12,7 @@ const Classes: React.FC = () => {
 
   const classList = [
     {
-    name: 'clycling',
+    name: 'cycling',
     type: 'bike Ride',
     description: 'Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups.',
     img: cycling

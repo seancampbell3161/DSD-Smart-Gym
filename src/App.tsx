@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 // Layouts
-import NonMemberLayout from "./layout/nonMemberLayout";
+import NonMemberLayout from "./layout/NonMemberLayout";
 import MemberLayout from "./layout/memberLayout";
 
 // Pages
@@ -11,12 +11,14 @@ import MemberPortal from "./pages/MemberPortal";
 import Classes from "./pages/Classes";
 import CafeOrdering from "./pages/CafeOrdering";
 import AdminDashboard from "./pages/AdminDashboard";
+import AboutUs from "./pages/AboutUs";
 
 // Global Footer
 import Footer from "./layout/footer";
 
 const nonMemberNav = [
   { label: "Home", to: "/" },
+  { label: "About Us", to: "/nonmember/aboutus"},
   { label: "Classes", to: "/nonmember/classes" }
 ];
 
@@ -43,6 +45,16 @@ const AppContent: React.FC = () => {
             </NonMemberLayout>
           }
         />
+        {/*About Us */}
+          <Route
+          path="/nonmember/aboutus"
+          element={
+            <NonMemberLayout navItems={nonMemberNav}>
+              <AboutUs />
+            </NonMemberLayout>
+          }
+
+         />
 
         {/* Member Portal */}
         <Route
