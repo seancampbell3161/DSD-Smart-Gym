@@ -25,7 +25,7 @@ const ComparisonTable: React.FC<ComparisonTableProps> = ({ title, data }) => {
   }, [data]);
 
   return (
-    <div className="class-attendance-metric-card">
+    <div className="comparison-table">
       <h3>{title}</h3>
       <table>
         <thead>

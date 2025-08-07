@@ -6,7 +6,7 @@ const ClassAttendanceMetricCard: React.FC<ClassAttendanceMetricCardProps> = ({
   data,
 }) => {
   return (
-    <div className="class-attendance-metric-card">
+    <div className="comparison-table">
       <h3>{title}</h3>
       <table>
         <thead>
