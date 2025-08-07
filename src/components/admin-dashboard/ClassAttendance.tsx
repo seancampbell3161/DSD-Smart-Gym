@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import type { TimeOptions } from "../../types/Analytics.interface.ts";
-import type { ClassDataProps } from "../../types/ClassAttendance.interface.ts";
+// import type { ComparisonCountDatarops } from "../../types/ClassAttendance.interface.ts";
+import type { ComparisonCountData } from "../../types/Analytics.interface.ts";
 import TimePeriodButtons from "./TimePeriodButtons";
-import ClassAttendanceMetricCard from "./ClassAttendanceMetricCard.tsx";
 import MetricLayout from "../../layout/MetricLayout.tsx";
-import ClassAttwnsanceChart from "./ClassAttendanceChart.tsx";
+import MultiLineLineChart from "./MultiLineLineChart.tsx";
 import YearlyRange from "./YearlyRange.tsx";
 import SingleYearSelector from "./SingleYearSelector.tsx";
+import ComparisonTable from "./ComparisonTable.tsx";
 
 const ClassAttendance: React.FC = () => {
   const [timePeriod, setTimePeriod] = useState<TimeOptions>({
     button: "Monthly",
     tableHeader: "Month",
   });
-  const [countData, setCountData] = useState<ClassDataProps[]>([]);
+  const [countData, setCountData] = useState<ComparisonCountData[]>([]);
   const [invalidYearFormat, setInvalidYearFormat] = useState<boolean>(false);
 
   const pattern: RegExp = /^\d{4}$/;
@@ -107,12 +108,12 @@ const ClassAttendance: React.FC = () => {
           />
         }
         metricCard={
-          <ClassAttendanceMetricCard
-            title={"Class Attendance"}
+          <ComparisonTable
+            title={"Number of Attendees"}
             data={countData}
           />
         }
-        graph={<ClassAttwnsanceChart data={countData} />}
+        graph={<MultiLineLineChart data={countData} />}
       />
     </>
   );
