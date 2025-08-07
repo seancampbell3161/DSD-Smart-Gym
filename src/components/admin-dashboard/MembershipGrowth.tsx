@@ -2,11 +2,16 @@ import { useEffect, useState } from "react";
 import type {
   TimeOptions,
   coordinateProps,
+  ComparisonCountData,
 } from "../../types/Analytics.interface.ts";
 import TimePeriodButtons from "./TimePeriodButtons";
 import MetricCard from "./MetricCard";
 import SingleLineChart from "./SingleLineChart";
 import MetricLayout from "../../layout/MetricLayout.tsx";
+import YearlyRange from "./YearlyRange.tsx";
+import YearComparison from "./YearComparison.tsx";
+import MultiLineAreaChart from "./MultiLineAreaChart.tsx";
+import ComparisonTable from "./ComparisonTable.tsx";
 
 const MembershipGrowth: React.FC = () => {
   const [timePeriod, setTimePeriod] = useState<TimeOptions>({
@@ -14,7 +19,14 @@ const MembershipGrowth: React.FC = () => {
     tableHeader: "Month",
   });
   const [countData, setCountData] = useState<coordinateProps[]>([]);
+  const [comparisonCountData, setComparisonCountData] = useState<
+    ComparisonCountData[]
+  >([]);
+  const [invalidYearFormat, setInvalidYearFormat] = useState<boolean>(false);
 
+  const metricTitle: string = "Membership Growth";
+  const tableTitle: string = "Total Members";
+  const pattern: RegExp = /^\d{4}$/;
   // interface ApiResponse {
   //   _id: string;
   //   name: string;
@@ -29,7 +41,6 @@ const MembershipGrowth: React.FC = () => {
   // }
 
   const countMembersByYear = (/* members: ApiResponse[] */) => {
-    // x = year, y = memberCount
     const data = [
       { x: "2003", y: 59 },
       { x: "1990", y: 41 },
@@ -52,28 +63,26 @@ const MembershipGrowth: React.FC = () => {
       { x: "1993", y: 100 },
       { x: "2000", y: 48 },
     ];
-    // setCountData() members.map((member) => {"x": 2005, "y": 10})
     setCountData(data);
   };
 
   const countMembersByMonth = () => {
     // x = month, y = memberCount
     const data = [
-      { x: "Jan", y: 59 },
-      { x: "Feb", y: 41 },
-      { x: "Mar", y: 38 },
-      { x: "Apr", y: 66 },
-      { x: "May", y: 96 },
-      { x: "Jun", y: 72 },
-      { x: "Jul", y: 38 },
-      { x: "Aug", y: 72 },
-      { x: "Sep", y: 31 },
-      { x: "Oct", y: 2 },
-      { x: "Nov", y: 41 },
-      { x: "Dec", y: 66 },
+      { timePoint: "Jan", "2024": 12, "2025": 19 },
+      { timePoint: "Feb", "2024": 8, "2025": 22 },
+      { timePoint: "Mar", "2024": 15, "2025": 18 },
+      { timePoint: "Apr", "2024": 10, "2025": 14 },
+      { timePoint: "May", "2024": 17, "2025": 21 },
+      { timePoint: "Jun", "2024": 14, "2025": 16 },
+      { timePoint: "Jul", "2024": 11, "2025": 20 },
+      { timePoint: "Aug", "2024": 9, "2025": 17 },
+      { timePoint: "Sep", "2024": 13, "2025": 23 },
+      { timePoint: "Oct", "2024": 16, "2025": 15 },
+      { timePoint: "Nov", "2024": 7, "2025": 10 },
+      { timePoint: "Dec", "2024": 20, "2025": 12 },
     ];
-
-    setCountData(data);
+    setComparisonCountData(data);
   };
 
   useEffect(() => {
@@ -91,29 +100,59 @@ const MembershipGrowth: React.FC = () => {
 
   return (
     <>
-      <MetricLayout
-        title={"Membership Growth"}
-        buttonGroup={
-          <TimePeriodButtons
-            timePeriod={timePeriod}
-            setTimePeriod={setTimePeriod}
-          />
-        }
-        metricCard={
-          <MetricCard
-            title={"Membership Growth"}
-            timeInterval={timePeriod.tableHeader}
-            data={countData}
-          />
-        }
-        graph={<SingleLineChart data={countData} />}
-      />
-      {/* <TimePeriodButtons
-        timePeriod={timePeriod}
-        setTimePeriod={setTimePeriod}
-      />
-      <MetricCard title={"Membership Growth"} timeInterval={timePeriod.tableHeader} data={countData}/>
-      <SingleLineChart data={countData} /> */}
+      {timePeriod.button === "Yearly" ? (
+        <MetricLayout
+          title={metricTitle}
+          buttonGroup={
+            <TimePeriodButtons
+              timePeriod={timePeriod}
+              setTimePeriod={setTimePeriod}
+            />
+          }
+          invalidYearFormat={invalidYearFormat}
+          timeOptionInputs={
+            <YearlyRange
+              pattern={pattern}
+              setInvalidYearFormat={setInvalidYearFormat}
+            />
+          }
+          graph={<SingleLineChart data={countData} />}
+          metricCard={
+            <MetricCard
+              title={tableTitle}
+              timeInterval={timePeriod.tableHeader}
+              data={countData}
+            />
+          }
+        />
+      ) : (
+        <MetricLayout
+          title={metricTitle}
+          buttonGroup={
+            <TimePeriodButtons
+              timePeriod={timePeriod}
+              setTimePeriod={setTimePeriod}
+            />
+          }
+          invalidYearFormat={invalidYearFormat}
+          timeOptionInputs={
+            <YearComparison
+              pattern={pattern}
+              setInvalidYearFormat={setInvalidYearFormat}
+            />
+          }
+          graph={
+            <MultiLineAreaChart
+              data={comparisonCountData}
+              key1={"2024"}
+              key2={"2025"}
+            />
+          }
+          metricCard={
+            <ComparisonTable title={tableTitle} data={comparisonCountData} />
+          }
+        />
+      )}
     </>
   );
 };
