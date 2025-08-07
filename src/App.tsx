@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
+
 // Layouts
 import NonMemberLayout from "./layout/NonMemberLayout";
 import MemberLayout from "./layout/memberLayout";
@@ -55,7 +56,6 @@ const AppContent: React.FC = () => {
           }
 
          />
-
         {/* Member Portal */}
         <Route
           path="/member"

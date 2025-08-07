@@ -19,7 +19,7 @@ const QRModal: React.FC<QRModalProps> = ({ isOpen, onClose, gymId }) => {
       console.log("🌐 VITE_API_URL:", import.meta.env.VITE_API_URL);
 
       try {
-        const data = await ApiHandler.post("/api/access/generateQRCode", {
+        const data = await ApiHandler.post("/access/generateQRCode", {
           gym_id: gymId,
         });
 
@@ -46,7 +46,7 @@ const QRModal: React.FC<QRModalProps> = ({ isOpen, onClose, gymId }) => {
 
   const handleCheckInOut = async () => {
     try {
-      const data = await ApiHandler.post("/api/access/checkInOut", {
+      const data = await ApiHandler.post("/access/checkInOut", {
         gym_id: gymId,
       });
       alert(data.message || "Check-in/out successful.");

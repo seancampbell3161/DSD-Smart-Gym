@@ -90,7 +90,7 @@ const ApiHandler = {
   },
 
   async login(email: string, password: string) {
-    const loginUrl = `${API_BASE_URL}/api/users/login`;
+    const loginUrl = `${API_BASE_URL}/users/login`;
     console.log("🔐 Login URL:", loginUrl);
 
     const res = await fetch(loginUrl, {
