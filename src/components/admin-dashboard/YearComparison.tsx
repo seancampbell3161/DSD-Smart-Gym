@@ -4,12 +4,12 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import type { InvalidYearFormatProps } from "../../types/Analytics.interface.ts";
 
-const YearlyComparison: React.FC<InvalidYearFormatProps> = ({
+const YearComparison: React.FC<InvalidYearFormatProps> = ({
   pattern,
   setInvalidYearFormat,
 }) => {
-  const [yearOne, setYearOne] = useState<string | undefined>(undefined);
-  const [yearTwo, setYearTwo] = useState<string | undefined>(undefined);
+  const [yearOne, setYearOne] = useState<string>("");
+  const [yearTwo, setYearTwo] = useState<string>("");
 
   const handleYearlyComparisonRetrieve = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,4 +48,4 @@ const YearlyComparison: React.FC<InvalidYearFormatProps> = ({
     </Form>
   );
 };
-export default YearlyComparison;
+export default YearComparison;

@@ -2,19 +2,16 @@ import { useEffect, useState } from "react";
 import type {
   TimeOptions,
   coordinateProps,
+  ComparisonCountData,
 } from "../../types/Analytics.interface.ts";
 import TimePeriodButtons from "./TimePeriodButtons";
 import MetricCard from "./MetricCard";
 import SingleLineChart from "./SingleLineChart";
 import MetricLayout from "../../layout/MetricLayout.tsx";
 import YearlyRange from "./YearlyRange.tsx";
-import YearlyComparison from "./YearComparison.tsx";
+import YearComparison from "./YearComparison.tsx";
 import MultiLineAreaChart from "./MultiLineAreaChart.tsx";
-
-interface ComparisonCountData {
-  timePoint: string;
-  [key: string]: number | undefined | string;
-}
+import ComparisonTable from "./ComparisonTable.tsx";
 
 const MembershipGrowth: React.FC = () => {
   const [timePeriod, setTimePeriod] = useState<TimeOptions>({
@@ -27,8 +24,9 @@ const MembershipGrowth: React.FC = () => {
   >([]);
   const [invalidYearFormat, setInvalidYearFormat] = useState<boolean>(false);
 
+  const metricTitle: string = "Membership Growth";
+  const tableTitle: string = "Total Members";
   const pattern: RegExp = /^\d{4}$/;
-
   // interface ApiResponse {
   //   _id: string;
   //   name: string;
@@ -104,7 +102,7 @@ const MembershipGrowth: React.FC = () => {
     <>
       {timePeriod.button === "Yearly" ? (
         <MetricLayout
-          title={"Membership Growth"}
+          title={metricTitle}
           buttonGroup={
             <TimePeriodButtons
               timePeriod={timePeriod}
@@ -121,7 +119,7 @@ const MembershipGrowth: React.FC = () => {
           graph={<SingleLineChart data={countData} />}
           metricCard={
             <MetricCard
-              title={"Membership Growth"}
+              title={tableTitle}
               timeInterval={timePeriod.tableHeader}
               data={countData}
             />
@@ -129,7 +127,7 @@ const MembershipGrowth: React.FC = () => {
         />
       ) : (
         <MetricLayout
-          title={"Membership Growth"}
+          title={metricTitle}
           buttonGroup={
             <TimePeriodButtons
               timePeriod={timePeriod}
@@ -138,7 +136,7 @@ const MembershipGrowth: React.FC = () => {
           }
           invalidYearFormat={invalidYearFormat}
           timeOptionInputs={
-            <YearlyComparison
+            <YearComparison
               pattern={pattern}
               setInvalidYearFormat={setInvalidYearFormat}
             />
@@ -151,11 +149,7 @@ const MembershipGrowth: React.FC = () => {
             />
           }
           metricCard={
-            <MetricCard
-              title={"Membership Growth"}
-              timeInterval={timePeriod.tableHeader}
-              data={countData}
-            />
+            <ComparisonTable title={tableTitle} data={comparisonCountData} />
           }
         />
       )}
