@@ -2,83 +2,87 @@ import { useEffect, useState } from "react";
 import type {
   TimeOptions,
   coordinateProps,
+  ComparisonCountData,
+  TwoSelectedYears,
 } from "../../types/Analytics.interface.ts";
 import TimePeriodButtons from "./TimePeriodButtons";
 import MetricCard from "./MetricCard";
 import SingleLineChart from "./SingleLineChart";
 import MetricLayout from "../../layout/MetricLayout.tsx";
+import YearlyRange from "./YearlyRange.tsx";
+import YearComparison from "./YearComparison.tsx";
+import MultiLineAreaChart from "./MultiLineAreaChart.tsx";
+import ComparisonTable from "./ComparisonTable.tsx";
+import ApiHandler from "../../utils/ApiHandler.ts";
 
 const MembershipGrowth: React.FC = () => {
   const [timePeriod, setTimePeriod] = useState<TimeOptions>({
     button: "Monthly",
     tableHeader: "Month",
   });
+  const [selectedYears, setSelectedYears] = useState<TwoSelectedYears>({
+    yearOne: "",
+    yearTwo: "",
+  });
+  const [selectedComparisonYears, setSelectedComparisonYears] =
+    useState<TwoSelectedYears>({ yearOne: "", yearTwo: "" });
   const [countData, setCountData] = useState<coordinateProps[]>([]);
+  const [comparisonCountData, setComparisonCountData] = useState<
+    ComparisonCountData[]
+  >([]);
+  const [invalidYearFormat, setInvalidYearFormat] = useState<boolean>(false);
 
-  // interface ApiResponse {
-  //   _id: string;
-  //   name: string;
-  //   email: string;
-  //   role: string;
-  //   gym_id: string;
-  // }
+  const metricTitle: string = "Membership Growth";
+  const tableTitle: string = "Total Members";
+  const pattern: RegExp = /^\d{4}$/;
 
-  // const fetchAllMembers = async (): Promise<ApiResponse> => {
-  //     const response = await fetch('');
-  //     const data = await response.json();
-  // }
+  const countMembersByYear = async () => {
+    try {
+      const { yearOne, yearTwo } = selectedYears;
+      const paramString =
+        yearOne && yearTwo ? `?startYear=${yearOne}&endYear=${yearTwo}` : "";
+      const endpoint =
+        "/adminAnalytics/getYearlyMembershipGrowth" + paramString;
 
-  const countMembersByYear = (/* members: ApiResponse[] */) => {
-    // x = year, y = memberCount
-    const data = [
-      { x: "2003", y: 59 },
-      { x: "1990", y: 41 },
-      { x: "1997", y: 38 },
-      { x: "1999", y: 66 },
-      { x: "1996", y: 96 },
-      { x: "2011", y: 72 },
-      { x: "1996", y: 38 },
-      { x: "1995", y: 72 },
-      { x: "2004", y: 31 },
-      { x: "2005", y: 2 },
-      { x: "1999", y: 41 },
-      { x: "1990", y: 66 },
-      { x: "2005", y: 51 },
-      { x: "2008", y: 51 },
-      { x: "1989", y: 23 },
-      { x: "2007", y: 27 },
-      { x: "1993", y: 70 },
-      { x: "1997", y: 58 },
-      { x: "1993", y: 100 },
-      { x: "2000", y: 48 },
-    ];
-    // setCountData() members.map((member) => {"x": 2005, "y": 10})
-    setCountData(data);
+      const data = await ApiHandler.get(endpoint);
+      const formattedData = data.map(
+        (entry: { count: number; year: string }) => ({
+          x: entry.year,
+          y: entry.count,
+        })
+      );
+      setCountData(formattedData);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const countMembersByMonth = () => {
-    // x = month, y = memberCount
-    const data = [
-      { x: "Jan", y: 59 },
-      { x: "Feb", y: 41 },
-      { x: "Mar", y: 38 },
-      { x: "Apr", y: 66 },
-      { x: "May", y: 96 },
-      { x: "Jun", y: 72 },
-      { x: "Jul", y: 38 },
-      { x: "Aug", y: 72 },
-      { x: "Sep", y: 31 },
-      { x: "Oct", y: 2 },
-      { x: "Nov", y: 41 },
-      { x: "Dec", y: 66 },
-    ];
+  const countMembersByMonth = async () => {
+    try {
+      const { yearOne, yearTwo } = selectedComparisonYears;
+      const paramString =
+        yearOne && yearTwo ? `?startYear=${yearOne}&endYear=${yearTwo}` : "";
+      const endpoint =
+        "/adminAnalytics/getMonthlyMembershipGrowth" + paramString;
 
-    setCountData(data);
+      const { data, year } = await ApiHandler.get(endpoint);
+      const formattedData = data.map(
+        (entry: { count: number; month: string }) => {
+          const formattedEntry: {
+            timePoint: string;
+            [year: string]: number | string;
+          } = { timePoint: entry.month };
+          formattedEntry[year] = entry.count;
+          return formattedEntry;
+        }
+      );
+      setComparisonCountData(formattedData);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
-    // TODO: Get all members & wrap in higher order function
-    // const members = fetchAllMembers();
     switch (timePeriod.button) {
       case "Yearly":
         countMembersByYear();
@@ -87,33 +91,67 @@ const MembershipGrowth: React.FC = () => {
         countMembersByMonth();
         break;
     }
-  }, [timePeriod]);
+  }, [timePeriod, selectedYears, selectedComparisonYears]);
 
   return (
     <>
-      <MetricLayout
-        title={"Membership Growth"}
-        buttonGroup={
-          <TimePeriodButtons
-            timePeriod={timePeriod}
-            setTimePeriod={setTimePeriod}
-          />
-        }
-        metricCard={
-          <MetricCard
-            title={"Membership Growth"}
-            timeInterval={timePeriod.tableHeader}
-            data={countData}
-          />
-        }
-        graph={<SingleLineChart data={countData} />}
-      />
-      {/* <TimePeriodButtons
-        timePeriod={timePeriod}
-        setTimePeriod={setTimePeriod}
-      />
-      <MetricCard title={"Membership Growth"} timeInterval={timePeriod.tableHeader} data={countData}/>
-      <SingleLineChart data={countData} /> */}
+      {timePeriod.button === "Yearly" ? (
+        <MetricLayout
+          title={metricTitle}
+          buttonGroup={
+            <TimePeriodButtons
+              timePeriod={timePeriod}
+              setTimePeriod={setTimePeriod}
+            />
+          }
+          invalidYearFormat={invalidYearFormat}
+          timeOptionInputs={
+            <YearlyRange
+              pattern={pattern}
+              setInvalidYearFormat={setInvalidYearFormat}
+              setSelectedYears={setSelectedYears}
+            />
+          }
+          graph={<SingleLineChart data={countData} />}
+          metricCard={
+            <MetricCard
+              title={tableTitle}
+              timeInterval={timePeriod.tableHeader}
+              data={countData}
+            />
+          }
+        />
+      ) : (
+        <MetricLayout
+          title={metricTitle}
+          buttonGroup={
+            <TimePeriodButtons
+              timePeriod={timePeriod}
+              setTimePeriod={setTimePeriod}
+            />
+          }
+          invalidYearFormat={invalidYearFormat}
+          timeOptionInputs={
+            <YearComparison
+              pattern={pattern}
+              setInvalidYearFormat={setInvalidYearFormat}
+              setSelectedYears={setSelectedComparisonYears}
+            />
+          }
+          graph={
+            <MultiLineAreaChart
+              data={comparisonCountData}
+              key1={selectedComparisonYears.yearOne || ""}
+              key2={
+                selectedComparisonYears.yearTwo || "" + new Date().getFullYear()
+              }
+            />
+          }
+          metricCard={
+            <ComparisonTable title={tableTitle} data={comparisonCountData} />
+          }
+        />
+      )}
     </>
   );
 };
