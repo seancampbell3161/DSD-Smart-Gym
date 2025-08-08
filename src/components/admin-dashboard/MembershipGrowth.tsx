@@ -141,8 +141,10 @@ const MembershipGrowth: React.FC = () => {
           graph={
             <MultiLineAreaChart
               data={comparisonCountData}
-              key1={"2024"}
-              key2={"2025"}
+              key1={selectedComparisonYears.yearOne || ""}
+              key2={
+                selectedComparisonYears.yearTwo || "" + new Date().getFullYear()
+              }
             />
           }
           metricCard={

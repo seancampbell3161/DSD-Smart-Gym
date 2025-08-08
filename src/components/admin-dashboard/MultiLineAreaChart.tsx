@@ -26,7 +26,11 @@ const MultiLineAreaChart: React.FC<{
       <Tooltip />
       <Legend />
       <Area dataKey={key2} stroke="#76b901ff" fill="#bcfd4c" />
-      <Area dataKey={key1} stroke="#020202ff" fill="#02020228" />
+      {key1 === "" ? (
+        ""
+      ) : (
+        <Area dataKey={key1} stroke="#020202ff" fill="#02020228" />
+      )}
     </AreaChart>
   );
 };
