@@ -7,11 +7,6 @@ export interface coordinateProps {
   y: number;
 }
 
-export interface InvalidYearFormatProps {
-  pattern: RegExp;
-  setInvalidYearFormat: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
 export interface ComparisonCountData {
   timePoint: string;
   [key: string]: number | undefined | string;
@@ -21,3 +16,17 @@ export interface ComparisonTableProps {
   title: string;
   data: ComparisonCountData[];
 }
+
+export interface InvalidYearFormatProps {
+  pattern: RegExp;
+  setInvalidYearFormat: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface TwoSelectedYears {
+  yearOne: string;
+  yearTwo: string;
+}
+
+export type TwoYearInputProps = {
+  setSelectedYears: React.Dispatch<React.SetStateAction<TwoSelectedYears>>;
+} & InvalidYearFormatProps;

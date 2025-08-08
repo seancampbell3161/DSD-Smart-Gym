@@ -19,8 +19,10 @@ const MembershipGrowth: React.FC = () => {
     button: "Monthly",
     tableHeader: "Month",
   });
-  const [yearOne, setYearOne] = useState<string>("");
-  const [yearTwo, setYearTwo] = useState<string>("");
+  const [selectedYears, setSelectedYears] = useState({
+    yearOne: "",
+    yearTwo: "",
+  });
   const [countData, setCountData] = useState<coordinateProps[]>([]);
   const [comparisonCountData, setComparisonCountData] = useState<
     ComparisonCountData[]
@@ -33,15 +35,18 @@ const MembershipGrowth: React.FC = () => {
 
   const countMembersByYear = async () => {
     try {
-      const paramString = yearOne && yearTwo ? `?yearOne=${yearOne}&yearTwo=${yearTwo}` : "";
-      const endpoint = "/adminAnalytics/getYearlyMembershipGrowth" +  paramString;
+      const { yearOne, yearTwo } = selectedYears;
+      const paramString =
+        yearOne && yearTwo ? `?yearOne=${yearOne}&yearTwo=${yearTwo}` : "";
+      const endpoint =
+        "/adminAnalytics/getYearlyMembershipGrowth" + paramString;
+
       const data = await ApiHandler.get(endpoint);
-      const formattedData = data.map((entry: {count: number, year: string}) => (
-          {
-            x: entry.year,
-            y: entry.count
-          }
-        )
+      const formattedData = data.map(
+        (entry: { count: number; year: string }) => ({
+          x: entry.year,
+          y: entry.count,
+        })
       );
       setCountData(formattedData);
     } catch (error) {
@@ -51,18 +56,26 @@ const MembershipGrowth: React.FC = () => {
 
   const countMembersByMonth = async () => {
     try {
-      const paramString = yearOne && yearTwo ? `?yearOne=${yearOne}&yearTwo=${yearTwo}` : "";
-      const endpoint = "/adminAnalytics/getMonthlyMembershipGrowth" +  paramString;
+      const { yearOne, yearTwo } = selectedYears;
+      const paramString =
+        yearOne && yearTwo ? `?yearOne=${yearOne}&yearTwo=${yearTwo}` : "";
+      const endpoint =
+        "/adminAnalytics/getMonthlyMembershipGrowth" + paramString;
 
-      const {data, year} = await ApiHandler.get(endpoint);
-      const formattedData = data.map((entry: {count: number, month: string}) => {
-        const formattedEntry: {timePoint: string, [year: string]: number | string} = {timePoint: entry.month};
-        formattedEntry[year] = entry.count;
-        return formattedEntry;
-      })
+      const { data, year } = await ApiHandler.get(endpoint);
+      const formattedData = data.map(
+        (entry: { count: number; month: string }) => {
+          const formattedEntry: {
+            timePoint: string;
+            [year: string]: number | string;
+          } = { timePoint: entry.month };
+          formattedEntry[year] = entry.count;
+          return formattedEntry;
+        }
+      );
       setComparisonCountData(formattedData);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -75,7 +88,7 @@ const MembershipGrowth: React.FC = () => {
         countMembersByMonth();
         break;
     }
-  }, [timePeriod]);
+  }, [timePeriod, selectedYears]);
 
   return (
     <>
@@ -93,6 +106,7 @@ const MembershipGrowth: React.FC = () => {
             <YearlyRange
               pattern={pattern}
               setInvalidYearFormat={setInvalidYearFormat}
+              setSelectedYears={setSelectedYears}
             />
           }
           graph={<SingleLineChart data={countData} />}
