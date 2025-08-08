@@ -40,7 +40,7 @@ const MembershipGrowth: React.FC = () => {
     try {
       const { yearOne, yearTwo } = selectedYears;
       const paramString =
-        yearOne && yearTwo ? `?yearOne=${yearOne}&yearTwo=${yearTwo}` : "";
+        yearOne && yearTwo ? `?startYear=${yearOne}&endYear=${yearTwo}` : "";
       const endpoint =
         "/adminAnalytics/getYearlyMembershipGrowth" + paramString;
 
@@ -61,7 +61,7 @@ const MembershipGrowth: React.FC = () => {
     try {
       const { yearOne, yearTwo } = selectedComparisonYears;
       const paramString =
-        yearOne && yearTwo ? `?yearOne=${yearOne}&yearTwo=${yearTwo}` : "";
+        yearOne && yearTwo ? `?startYear=${yearOne}&endYear=${yearTwo}` : "";
       const endpoint =
         "/adminAnalytics/getMonthlyMembershipGrowth" + paramString;
 
