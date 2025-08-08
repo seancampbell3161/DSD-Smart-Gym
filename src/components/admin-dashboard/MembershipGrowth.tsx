@@ -3,6 +3,7 @@ import type {
   TimeOptions,
   coordinateProps,
   ComparisonCountData,
+  TwoSelectedYears,
 } from "../../types/Analytics.interface.ts";
 import TimePeriodButtons from "./TimePeriodButtons";
 import MetricCard from "./MetricCard";
@@ -19,10 +20,12 @@ const MembershipGrowth: React.FC = () => {
     button: "Monthly",
     tableHeader: "Month",
   });
-  const [selectedYears, setSelectedYears] = useState({
+  const [selectedYears, setSelectedYears] = useState<TwoSelectedYears>({
     yearOne: "",
     yearTwo: "",
   });
+  const [selectedComparisonYears, setSelectedComparisonYears] =
+    useState<TwoSelectedYears>({ yearOne: "", yearTwo: "" });
   const [countData, setCountData] = useState<coordinateProps[]>([]);
   const [comparisonCountData, setComparisonCountData] = useState<
     ComparisonCountData[]
@@ -56,7 +59,7 @@ const MembershipGrowth: React.FC = () => {
 
   const countMembersByMonth = async () => {
     try {
-      const { yearOne, yearTwo } = selectedYears;
+      const { yearOne, yearTwo } = selectedComparisonYears;
       const paramString =
         yearOne && yearTwo ? `?yearOne=${yearOne}&yearTwo=${yearTwo}` : "";
       const endpoint =
@@ -88,7 +91,7 @@ const MembershipGrowth: React.FC = () => {
         countMembersByMonth();
         break;
     }
-  }, [timePeriod, selectedYears]);
+  }, [timePeriod, selectedYears, selectedComparisonYears]);
 
   return (
     <>
@@ -132,6 +135,7 @@ const MembershipGrowth: React.FC = () => {
             <YearComparison
               pattern={pattern}
               setInvalidYearFormat={setInvalidYearFormat}
+              setSelectedYears={setSelectedComparisonYears}
             />
           }
           graph={

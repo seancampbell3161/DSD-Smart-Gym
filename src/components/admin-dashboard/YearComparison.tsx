@@ -1,27 +1,43 @@
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import type { InvalidYearFormatProps } from "../../types/Analytics.interface.ts";
+import type {
+  TwoSelectedYears,
+  TwoYearInputProps,
+} from "../../types/Analytics.interface.ts";
 
-const YearComparison: React.FC<InvalidYearFormatProps> = ({
+const YearComparison: React.FC<TwoYearInputProps> = ({
   pattern,
   setInvalidYearFormat,
+  setSelectedYears,
 }) => {
-  const [yearOne, setYearOne] = useState<string>("");
-  const [yearTwo, setYearTwo] = useState<string>("");
+  const [yearInputs, setYearInputs] = useState<TwoSelectedYears>({
+    yearOne: "",
+    yearTwo: "",
+  });
+
+  const handleYearUpdate = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setYearInputs((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleYearlyComparisonRetrieve = (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
+      const { yearOne, yearTwo } = yearInputs;
       //  @ts-ignore: TS2345
-      if (!pattern.test(yearOne) || !pattern.test(yearTwo)) {
+      if (yearOne === "" && yearTwo === "") {
+        setSelectedYears(yearInputs);
+      } else if (!pattern.test(yearOne) || !pattern.test(yearTwo)) {
         setInvalidYearFormat(true);
         setTimeout(() => {
           setInvalidYearFormat(false);
         }, 4000);
         throw new Error("Invalid year format");
+      } else {
+        setSelectedYears(yearInputs);
       }
     } catch (error) {
       console.error(error);
@@ -33,13 +49,17 @@ const YearComparison: React.FC<InvalidYearFormatProps> = ({
         <Form.Control
           aria-label="year"
           placeholder="Year (YYYY)"
-          onChange={(e) => setYearOne(e.target.value)}
+          name="yearOne"
+          value={yearInputs.yearOne}
+          onChange={handleYearUpdate}
         />
         <InputGroup.Text>vs</InputGroup.Text>
         <Form.Control
           aria-label="year"
           placeholder="Year (YYYY)"
-          onChange={(e) => setYearTwo(e.target.value)}
+          name="yearTwo"
+          value={yearInputs.yearTwo}
+          onChange={handleYearUpdate}
         />
         <Button variant="outline-secondary" id="button-addon1" type="submit">
           Retrieve
