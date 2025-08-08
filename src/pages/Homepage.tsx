@@ -35,7 +35,7 @@ const Homepage: React.FC = () => {
       setMessage("✅ Logged in successfully!");
       setEmail("");
       setPassword("");
-      navigate("/member");
+      navigate("/admin");
     } catch (err: any) {
       console.error("Login error:", err);
       setMessage(`❌ Login failed: ${err.message}`);

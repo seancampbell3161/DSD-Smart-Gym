@@ -8,15 +8,15 @@ const YearlyRange: React.FC<InvalidYearFormatProps> = ({
   pattern,
   setInvalidYearFormat,
 }) => {
-  const [startYear, setStartYear] = useState<string | undefined>(undefined);
-  const [endYear, setEndYear] = useState<string | undefined>(undefined);
+  const [yearOne, setyearOne] = useState<string | undefined>(undefined);
+  const [yearTwo, setyearTwo] = useState<string | undefined>(undefined);
 
   const handleYearlyRangeRetrieve = (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       //  @ts-ignore: TS2345
-      if (!pattern.test(startYear) || !pattern.test(endYear)) {
+      if (!pattern.test(yearOne) || !pattern.test(yearTwo)) {
         setInvalidYearFormat(true);
         setTimeout(() => {
           setInvalidYearFormat(false);
@@ -35,12 +35,12 @@ const YearlyRange: React.FC<InvalidYearFormatProps> = ({
         <Form.Control
           aria-label="start year"
           placeholder="Start Year (YYYY)"
-          onChange={(e) => setStartYear(e.target.value)}
+          onChange={(e) => setyearOne(e.target.value)}
         />
         <Form.Control
           aria-label="end year"
           placeholder="End Year (YYYY)"
-          onChange={(e) => setEndYear(e.target.value)}
+          onChange={(e) => setyearTwo(e.target.value)}
         />
         <Button variant="outline-secondary" id="button-addon1" type="submit">
           Retrieve
