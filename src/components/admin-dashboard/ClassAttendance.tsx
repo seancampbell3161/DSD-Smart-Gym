@@ -1,50 +1,60 @@
 import { useEffect, useState } from "react";
 import type { TimeOptions } from "../../types/Analytics.interface.ts";
-// import type { ComparisonCountDatarops } from "../../types/ClassAttendance.interface.ts";
-import type { ComparisonCountData } from "../../types/Analytics.interface.ts";
+import type {
+  ComparisonCountData,
+  TwoSelectedYears,
+} from "../../types/Analytics.interface.ts";
 import TimePeriodButtons from "./TimePeriodButtons";
 import MetricLayout from "../../layout/MetricLayout.tsx";
 import MultiLineLineChart from "./MultiLineLineChart.tsx";
 import YearlyRange from "./YearlyRange.tsx";
 import SingleYearSelector from "./SingleYearSelector.tsx";
 import ComparisonTable from "./ComparisonTable.tsx";
+import ApiHandler from "../../utils/ApiHandler.ts";
 
 const ClassAttendance: React.FC = () => {
   const [timePeriod, setTimePeriod] = useState<TimeOptions>({
     button: "Monthly",
     tableHeader: "Month",
   });
-  const [countData, setCountData] = useState<ComparisonCountData[]>([]);
+  const [comparisonCountData, setComparisonCountData] = useState<
+    ComparisonCountData[]
+  >([]);
+  const [selectedYears, setSelectedYears] = useState<TwoSelectedYears>({
+    yearOne: "",
+    yearTwo: "",
+  });
   const [invalidYearFormat, setInvalidYearFormat] = useState<boolean>(false);
 
   const pattern: RegExp = /^\d{4}$/;
 
-  const countMembersByYear = () => {
-    const data = [
-      {
-        timePoint: "2003",
-        boxing: 30,
-        cycling: 50,
-        yoga: 20,
-        HIIT: 46,
-      },
-      {
-        timePoint: "2000",
-        boxing: 50,
-        cycling: 30,
-        yoga: 10,
-        HIIT: 35,
-      },
-      {
-        timePoint: "2004",
-        boxing: 40,
-        cycling: 32,
-        yoga: 20,
-        HIIT: 36,
-      },
-    ];
+  const countMembersByYear = async () => {
+    try {
+      const { yearOne, yearTwo } = selectedYears;
+      const paramString =
+        yearOne && yearTwo ? `?startYear=${yearOne}&endYear=${yearTwo}` : "";
+      const endpoint = "/adminAnalytics/getYearlyClassAttendance" + paramString;
 
-    setCountData(data);
+      const data = await ApiHandler.get(endpoint);
+      if (Array.isArray(data)) {
+        const formattedData = data.map((entry) => {
+          const formattedEntry: ComparisonCountData = { timePoint: entry.year };
+          for (const activity of entry.items) {
+            formattedEntry[activity.classType] = activity.count;
+          }
+          return formattedEntry;
+        });
+        setComparisonCountData(formattedData);
+      } else {
+        const formattedData: ComparisonCountData = { timePoint: data.year };
+        for (const activity of data.items) {
+          formattedData[activity.classType] = activity.count;
+        }
+        setComparisonCountData([formattedData]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const countMembersByMonth = () => {
@@ -72,7 +82,7 @@ const ClassAttendance: React.FC = () => {
       },
     ];
 
-    setCountData(data);
+    setComparisonCountData(data);
   };
 
   useEffect(() => {
@@ -84,7 +94,7 @@ const ClassAttendance: React.FC = () => {
         countMembersByMonth();
         break;
     }
-  }, [timePeriod]);
+  }, [timePeriod, selectedYears]);
 
   return (
     <>
@@ -95,12 +105,16 @@ const ClassAttendance: React.FC = () => {
             <YearlyRange
               pattern={pattern}
               setInvalidYearFormat={setInvalidYearFormat}
+              setSelectedYears={setSelectedYears}
             />
           ) : (
-            <SingleYearSelector pattern={pattern} setInvalidYearFormat={setInvalidYearFormat}/>
+            <SingleYearSelector
+              pattern={pattern}
+              setInvalidYearFormat={setInvalidYearFormat}
+            />
           )
         }
-        invalidYearFormat={invalidYearFormat}        
+        invalidYearFormat={invalidYearFormat}
         buttonGroup={
           <TimePeriodButtons
             timePeriod={timePeriod}
@@ -110,10 +124,10 @@ const ClassAttendance: React.FC = () => {
         metricCard={
           <ComparisonTable
             title={"Number of Attendees"}
-            data={countData}
+            data={comparisonCountData}
           />
         }
-        graph={<MultiLineLineChart data={countData} />}
+        graph={<MultiLineLineChart data={comparisonCountData} />}
       />
     </>
   );
