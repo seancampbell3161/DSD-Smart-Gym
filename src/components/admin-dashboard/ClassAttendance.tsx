@@ -3,6 +3,7 @@ import type { TimeOptions } from "../../types/Analytics.interface.ts";
 import type {
   ComparisonCountData,
   TwoSelectedYears,
+  OneSelectedYear,
 } from "../../types/Analytics.interface.ts";
 import TimePeriodButtons from "./TimePeriodButtons";
 import MetricLayout from "../../layout/MetricLayout.tsx";
@@ -36,6 +37,9 @@ const ClassAttendance: React.FC = () => {
     yearOne: "",
     yearTwo: "",
   });
+  const [selectedSingleYear, setSelectedSingleYear] =
+    useState<OneSelectedYear>("");
+
   const [invalidYearFormat, setInvalidYearFormat] = useState<boolean>(false);
 
   const pattern: RegExp = /^\d{4}$/;
@@ -71,9 +75,13 @@ const ClassAttendance: React.FC = () => {
 
   const countMembersByMonth = async () => {
     try {
-      const data = await ApiHandler.get(
-        "/adminAnalytics/getMonthlyClassAttendance"
-      );
+      const paramsString = selectedSingleYear
+        ? `?startYear=${selectedSingleYear}&endYear=${selectedSingleYear}`
+        : "";
+      const endpoint =
+        "/adminAnalytics/getMonthlyClassAttendance" + paramsString;
+
+      const data = await ApiHandler.get(endpoint);
       const formattedData = data.map((entry: InputEntry) => {
         const formattedEntry: ComparisonCountData = { timePoint: entry.month };
         for (const activity of entry.classes) {
@@ -97,7 +105,7 @@ const ClassAttendance: React.FC = () => {
         countMembersByMonth();
         break;
     }
-  }, [timePeriod, selectedYears]);
+  }, [timePeriod, selectedYears, selectedSingleYear]);
 
   return (
     <>
@@ -133,6 +141,7 @@ const ClassAttendance: React.FC = () => {
             <SingleYearSelector
               pattern={pattern}
               setInvalidYearFormat={setInvalidYearFormat}
+              setSingleSelectedYear={setSelectedSingleYear}
             />
           }
           invalidYearFormat={invalidYearFormat}
@@ -144,7 +153,11 @@ const ClassAttendance: React.FC = () => {
           }
           metricCard={
             <ComparisonTable
-              title={"Number of Attendees"}
+              title={`Number of ${
+                selectedSingleYear
+                  ? selectedSingleYear
+                  : new Date().getFullYear()
+              } Attendees`}
               data={monthlyComparisonCountData}
             />
           }

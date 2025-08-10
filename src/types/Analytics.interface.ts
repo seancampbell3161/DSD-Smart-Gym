@@ -22,6 +22,12 @@ export interface InvalidYearFormatProps {
   setInvalidYearFormat: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+export type OneSelectedYear = string;
+
+export type OneYearInputProps = {
+  setSingleSelectedYear: React.Dispatch<React.SetStateAction<OneSelectedYear>>;
+} & InvalidYearFormatProps;
+
 export interface TwoSelectedYears {
   yearOne: string;
   yearTwo: string;

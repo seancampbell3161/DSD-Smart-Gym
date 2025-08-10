@@ -2,25 +2,33 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import type { InvalidYearFormatProps } from "../../types/Analytics.interface.ts";
+import type {
+  OneSelectedYear,
+  OneYearInputProps,
+} from "../../types/Analytics.interface.ts";
 
-const SingleYearSelector: React.FC<InvalidYearFormatProps> = ({
+const SingleYearSelector: React.FC<OneYearInputProps> = ({
   pattern,
   setInvalidYearFormat,
+  setSingleSelectedYear,
 }) => {
-  const [year, setYear] = useState<string | undefined>(undefined);
+  const [year, setYear] = useState<OneSelectedYear>("");
 
   const handleYearlyRangeRetrieve = (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       //  @ts-ignore: TS2345
-      if (!pattern.test(year)) {
+      if (year === "") {
+        setSingleSelectedYear(year);
+      } else if (!pattern.test(year)) {
         setInvalidYearFormat(true);
         setTimeout(() => {
           setInvalidYearFormat(false);
         }, 4000);
         throw new Error("Invalid year format");
+      } else {
+        setSingleSelectedYear(year);
       }
     } catch (error) {
       console.error(error);
