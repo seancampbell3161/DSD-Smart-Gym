@@ -12,12 +12,24 @@ import SingleYearSelector from "./SingleYearSelector.tsx";
 import ComparisonTable from "./ComparisonTable.tsx";
 import ApiHandler from "../../utils/ApiHandler.ts";
 
+interface InputEntry {
+  year: string;
+  month: string;
+  classes: {
+    classType: string;
+    count: number;
+  }[];
+}
+
 const ClassAttendance: React.FC = () => {
   const [timePeriod, setTimePeriod] = useState<TimeOptions>({
     button: "Monthly",
     tableHeader: "Month",
   });
-  const [comparisonCountData, setComparisonCountData] = useState<
+  const [yearlyComparisonCountData, setYearlyComparisonCountData] = useState<
+    ComparisonCountData[]
+  >([]);
+  const [monthlyComparisonCountData, setMonthlyComparisonCountData] = useState<
     ComparisonCountData[]
   >([]);
   const [selectedYears, setSelectedYears] = useState<TwoSelectedYears>({
@@ -44,45 +56,36 @@ const ClassAttendance: React.FC = () => {
           }
           return formattedEntry;
         });
-        setComparisonCountData(formattedData);
+        setYearlyComparisonCountData(formattedData);
       } else {
         const formattedData: ComparisonCountData = { timePoint: data.year };
         for (const activity of data.items) {
           formattedData[activity.classType] = activity.count;
         }
-        setComparisonCountData([formattedData]);
+        setYearlyComparisonCountData([formattedData]);
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const countMembersByMonth = () => {
-    const data = [
-      {
-        timePoint: "Feb",
-        boxing: 30,
-        cycling: 50,
-        yoga: 20,
-        HIIT: 46,
-      },
-      {
-        timePoint: "Mar",
-        boxing: 50,
-        cycling: 30,
-        yoga: 10,
-        HIIT: 35,
-      },
-      {
-        timePoint: "Apr",
-        boxing: 40,
-        cycling: 32,
-        yoga: 20,
-        HIIT: 36,
-      },
-    ];
+  const countMembersByMonth = async () => {
+    try {
+      const data = await ApiHandler.get(
+        "/adminAnalytics/getMonthlyClassAttendance"
+      );
+      const formattedData = data.map((entry: InputEntry) => {
+        const formattedEntry: ComparisonCountData = { timePoint: entry.month };
+        for (const activity of entry.classes) {
+          formattedEntry[activity.classType] = activity.count;
+        }
+        return formattedEntry;
+      });
 
-    setComparisonCountData(data);
+      setMonthlyComparisonCountData(formattedData);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -98,37 +101,56 @@ const ClassAttendance: React.FC = () => {
 
   return (
     <>
-      <MetricLayout
-        title={"Class Attendance"}
-        timeOptionInputs={
-          timePeriod.button === "Yearly" ? (
+      {timePeriod.button === "Yearly" ? (
+        <MetricLayout
+          title={"Class Attendance"}
+          timeOptionInputs={
             <YearlyRange
               pattern={pattern}
               setInvalidYearFormat={setInvalidYearFormat}
               setSelectedYears={setSelectedYears}
             />
-          ) : (
+          }
+          invalidYearFormat={invalidYearFormat}
+          buttonGroup={
+            <TimePeriodButtons
+              timePeriod={timePeriod}
+              setTimePeriod={setTimePeriod}
+            />
+          }
+          metricCard={
+            <ComparisonTable
+              title={"Number of Attendees"}
+              data={yearlyComparisonCountData}
+            />
+          }
+          graph={<MultiLineLineChart data={yearlyComparisonCountData} />}
+        />
+      ) : (
+        <MetricLayout
+          title={"Class Attendance"}
+          timeOptionInputs={
             <SingleYearSelector
               pattern={pattern}
               setInvalidYearFormat={setInvalidYearFormat}
             />
-          )
-        }
-        invalidYearFormat={invalidYearFormat}
-        buttonGroup={
-          <TimePeriodButtons
-            timePeriod={timePeriod}
-            setTimePeriod={setTimePeriod}
-          />
-        }
-        metricCard={
-          <ComparisonTable
-            title={"Number of Attendees"}
-            data={comparisonCountData}
-          />
-        }
-        graph={<MultiLineLineChart data={comparisonCountData} />}
-      />
+          }
+          invalidYearFormat={invalidYearFormat}
+          buttonGroup={
+            <TimePeriodButtons
+              timePeriod={timePeriod}
+              setTimePeriod={setTimePeriod}
+            />
+          }
+          metricCard={
+            <ComparisonTable
+              title={"Number of Attendees"}
+              data={monthlyComparisonCountData}
+            />
+          }
+          graph={<MultiLineLineChart data={monthlyComparisonCountData} />}
+        />
+      )}
     </>
   );
 };
