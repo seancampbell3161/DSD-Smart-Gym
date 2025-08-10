@@ -23,7 +23,7 @@ const ReceiptModal: React.FC<ReceiptModalProps> = ({ cart, total, onClose }) => 
         <ul className="receipt-list">
           {cart.map((item) => (
             <li key={item._id}>
-              <span>{item.item_name}</span>
+              <span>{item.item_name.toUpperCase()}</span>
               <span>x{item.quantityOrdered}</span>
               <span>${(item.price * item.quantityOrdered).toFixed(2)}</span>
             </li>

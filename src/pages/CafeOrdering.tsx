@@ -1,5 +1,5 @@
 // src/pages/CafeOrdering.tsx
-import React, { useEffect, useMemo, useState, useCallback } from "react";
+import React, { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 import ApiHandler from "../utils/ApiHandler";
@@ -36,25 +36,40 @@ function getImageForItem(name: string): string | undefined {
   return IMAGE_MAP[name.trim().toLowerCase()];
 }
 
+// 🔑 separate keys so the browsing cart can't clobber the checkout snapshot
+const CART_KEY = "smartGymCart";
+const SNAPSHOT_KEY = "smartGymCartSnapshot";
+
 const CafeOrdering: React.FC = () => {
-  const [cafeItems, setCafeItems] = useState<CafeItem[]>([]);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const isSuccess = params.get("checkout") === "success";
+
+  // Don't rehydrate cart on success return
   const [cart, setCart] = useState<CartItem[]>(() => {
-    const storedCart = localStorage.getItem("smartGymCart");
-    return storedCart ? JSON.parse(storedCart) : [];
+    if (typeof window !== "undefined") {
+      const search = new URLSearchParams(window.location.search);
+      if (search.get("checkout") === "success") return [];
+    }
+    const stored = localStorage.getItem(CART_KEY);
+    return stored ? JSON.parse(stored) : [];
   });
 
+  const [cafeItems, setCafeItems] = useState<CafeItem[]>([]);
   const [receiptCart, setReceiptCart] = useState<CartItem[]>([]);
   const [receiptTotal, setReceiptTotal] = useState(0);
   const [showReceipt, setShowReceipt] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const location = useLocation();
+
+  const finalizedRef = useRef(false);
 
   const fetchInventory = async () => {
     try {
       setLoading(true);
       const data = await ApiHandler.get("/cafe-inventory");
       setCafeItems(data?.data || []);
+      console.log("📦 Current inventory from DB:", data?.data);
     } catch (err: any) {
       setMessage("Failed to load inventory: " + (err?.message || "Unknown error"));
     } finally {
@@ -66,31 +81,56 @@ const CafeOrdering: React.FC = () => {
     fetchInventory();
   }, []);
 
+  // Keep browsing cart synced (this never touches the snapshot key)
   useEffect(() => {
-    localStorage.setItem("smartGymCart", JSON.stringify(cart));
-  }, [cart]);
+    if (showReceipt) return; // don't resave while viewing receipt
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  }, [cart, showReceipt]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const isSuccess = params.get("checkout") === "success";
+  // ✅ On success: read SNAPSHOT first; then clear everything and show receipt
+  // ✅ On success: read SNAPSHOT first; then clear everything and show receipt
+useEffect(() => {
+  if (!isSuccess || finalizedRef.current) return;
+  finalizedRef.current = true;
 
-    if (isSuccess) {
-      const finalize = async () => {
-        try {
-          const res = await ApiHandler.post("/cafe-inventory/checkout-success", {});
-          setReceiptCart(res.data.items);
-          setReceiptTotal(res.data.total);
-          setShowReceipt(true);
-          localStorage.removeItem("smartGymCart");
-        } catch (err) {
-          console.error("❌ Error finalizing receipt:", err);
-          setShowReceipt(true); // still show something if fallback needed
-        }
-      };
+  const storedSnap = localStorage.getItem(SNAPSHOT_KEY);
+  const parsedCart: CartItem[] = storedSnap ? JSON.parse(storedSnap) : [];
 
-      finalize();
+  const fallbackTotal = parsedCart.reduce(
+    (sum, item) => sum + item.price * item.quantityOrdered,
+    0
+  );
+
+  const finalize = async () => {
+    try {
+      const res = await ApiHandler.post("/cafe-inventory/checkout-success", {
+        cart: parsedCart,
+        total: fallbackTotal,
+      });
+
+      setReceiptCart(res.data?.items ?? parsedCart);
+      setReceiptTotal(res.data?.total ?? fallbackTotal);
+
+      // ✅ Immediately update inventory in UI
+      if (res.data?.updatedInventory) {
+        setCafeItems(res.data.updatedInventory);
+      }
+    } catch {
+      // fall back to snapshot
+      setReceiptCart(parsedCart);
+      setReceiptTotal(fallbackTotal);
+    } finally {
+      setShowReceipt(true);
+      setCart([]);
+      localStorage.removeItem(CART_KEY);
+      localStorage.removeItem(SNAPSHOT_KEY);
+      // clean URL so effect won't re-run
+      window.history.replaceState({}, document.title, location.pathname);
     }
-  }, [location.search]);
+  };
+
+  finalize();
+}, [isSuccess, location.pathname]);
 
   const addToCart = useCallback((item: CafeItem) => {
     if (item.quantity <= 0) return;
@@ -113,6 +153,14 @@ const CafeOrdering: React.FC = () => {
     () => cart.reduce((sum, i) => sum + i.price * i.quantityOrdered, 0),
     [cart]
   );
+
+  // Save a dedicated snapshot right before redirecting to Stripe
+  const handleCheckout = useCallback(() => {
+    localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(cart));
+    // (optional) also keep the normal cart in case user cancels
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    startStripeCheckout(cart);
+  }, [cart]);
 
   return (
     <>
@@ -162,13 +210,14 @@ const CafeOrdering: React.FC = () => {
             })}
           </div>
 
-          {cart.length > 0 && (
+          {/* Hide cart while receipt is visible */}
+          {!showReceipt && cart.length > 0 && (
             <div className="cart-section">
               <h3 className="cart-title">🛒 Your Cart</h3>
               <ul className="cart-list">
                 {cart.map((item) => (
                   <li key={item._id} className="cart-line">
-                    <span className="cart-name">{item.item_name}</span>
+                    <span className="cart-name">{item.item_name.toUpperCase()}</span>
                     <span className="cart-mult">x {item.quantityOrdered}</span>
                     <span className="cart-price-wrapper">
                       <span className="cart-price">
@@ -191,7 +240,7 @@ const CafeOrdering: React.FC = () => {
                 <strong>${cartTotal.toFixed(2)}</strong>
               </div>
 
-              <button className="checkout-button" onClick={() => startStripeCheckout(cart)}>
+              <button className="checkout-button" onClick={handleCheckout}>
                 Checkout with Stripe
               </button>
             </div>
@@ -201,8 +250,8 @@ const CafeOrdering: React.FC = () => {
 
       {showReceipt && (
         <ReceiptModal
-          cart={receiptCart.length ? receiptCart : cart}
-          total={receiptTotal || cartTotal}
+          cart={receiptCart}
+          total={receiptTotal}
           onClose={() => setShowReceipt(false)}
         />
       )}
