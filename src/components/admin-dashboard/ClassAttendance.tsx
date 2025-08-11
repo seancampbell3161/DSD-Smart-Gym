@@ -41,6 +41,7 @@ const ClassAttendance: React.FC = () => {
     useState<OneSelectedYear>("");
 
   const [invalidYearFormat, setInvalidYearFormat] = useState<boolean>(false);
+  const [noDataAlert, setNoDataAlert] = useState<boolean>(false);
 
   const pattern: RegExp = /^\d{4}$/;
 
@@ -93,6 +94,11 @@ const ClassAttendance: React.FC = () => {
       setMonthlyComparisonCountData(formattedData);
     } catch (error) {
       console.error(error);
+      setNoDataAlert(true);
+      setTimeout(() => {
+        setNoDataAlert(false);
+      }, 4000);
+      setSelectedSingleYear(String(new Date().getFullYear()));
     }
   };
 
@@ -145,6 +151,7 @@ const ClassAttendance: React.FC = () => {
             />
           }
           invalidYearFormat={invalidYearFormat}
+          noDataAlert={noDataAlert}
           buttonGroup={
             <TimePeriodButtons
               timePeriod={timePeriod}

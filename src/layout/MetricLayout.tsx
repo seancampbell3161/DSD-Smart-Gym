@@ -2,17 +2,19 @@ import "../styles/MetricLayout.css";
 
 interface MetricLayoutProps {
   title: string;
-  timeOptionInputs?: React.ReactElement;
-  invalidYearFormat?: boolean;
   buttonGroup: React.ReactElement;
   metricCard: React.ReactElement;
   graph: React.ReactElement;
+  timeOptionInputs?: React.ReactElement;
+  invalidYearFormat?: boolean;
+  noDataAlert?: boolean;
 }
 
 const MetricLayout: React.FC<MetricLayoutProps> = ({
   title,
   timeOptionInputs,
   invalidYearFormat,
+  noDataAlert,
   buttonGroup,
   metricCard,
   graph,
@@ -25,6 +27,9 @@ const MetricLayout: React.FC<MetricLayoutProps> = ({
         <div>{timeOptionInputs}</div>
         <div className={invalidYearFormat ? "invalid-year" : ""}>
           {invalidYearFormat ? "Please enter valid year(YYYY)" : ""}
+        </div>
+        <div className={noDataAlert ? "no-data-alert" : ""}>
+          {noDataAlert ? "Data does not exist for the provided year" : ""}
         </div>
       </div>
       <div className="metric-card">{metricCard}</div>

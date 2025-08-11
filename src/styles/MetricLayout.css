@@ -40,6 +40,16 @@
   color: red;
 }
 
+.no-data-alert {
+  width: 350px;
+  border-radius: 5%;
+  text-align: center;
+  align-content: center;
+  background-color: rgb(255, 209, 209);
+  border: 1px solid red;
+  color: red;
+}
+
 .graph {
   margin: auto 0;
   justify-self: stretch;
