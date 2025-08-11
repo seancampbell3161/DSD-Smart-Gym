@@ -25,7 +25,7 @@ const ComparisonTable: React.FC<ComparisonTableProps> = ({ title, data }) => {
   }, [data]);
 
   return (
-    <div className="comparison-table">
+    <div className="comparison-table overflow-auto">
       <h3>{title}</h3>
       <table>
         <thead>
