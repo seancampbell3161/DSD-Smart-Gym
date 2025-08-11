@@ -1,12 +1,11 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../styles/MemberNavbar.css';
 import Logo from '../assets/SG_Icon2.png';
 
-export interface MemberNavItem {
+interface MemberNavItem {
   label: string;
-  to?: string;
-  action?: 'logout';
+  to: string;
 }
 
 interface MemberNavbarProps {
@@ -14,35 +13,20 @@ interface MemberNavbarProps {
 }
 
 const MemberNavbar: React.FC<MemberNavbarProps> = ({ navItems }) => {
-  const navigate = useNavigate();
-
-  const handleClick = (item: MemberNavItem) => {
-    if (item.action === 'logout') {
-      localStorage.removeItem('token');
-      localStorage.removeItem('gym_id');
-      navigate('/');
-    }
-  };
-
   return (
     <header className="member-navbar">
       <div className="member-navbar-container">
-        {/* Left side: logo */}
+        {/* Left side: logo + title */}
         <div className="member-navbar-left">
           <img src={Logo} alt="Smart Gym logo" className="member-logo-img" />
+          {/* <span className="member-navbar-text">Member Portal</span> */}
         </div>
 
         {/* Right side: nav links */}
         <ul className="member-nav-links">
           {navItems.map((item, idx) => (
             <li key={idx}>
-              {item.action === 'logout' ? (
-                <button className="logout-button" onClick={() => handleClick(item)}>
-                  {item.label}
-                </button>
-              ) : (
-                <Link to={item.to!}>{item.label}</Link>
-              )}
+              <Link to={item.to}>{item.label}</Link>
             </li>
           ))}
         </ul>
