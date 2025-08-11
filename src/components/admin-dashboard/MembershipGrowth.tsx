@@ -36,6 +36,21 @@ const MembershipGrowth: React.FC = () => {
   const tableTitle: string = "Total Members";
   const pattern: RegExp = /^\d{4}$/;
 
+  const months: string[] = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
   const countMembersByYear = async () => {
     try {
       const { yearOne, yearTwo } = selectedYears;
@@ -65,20 +80,56 @@ const MembershipGrowth: React.FC = () => {
       const endpoint =
         "/adminAnalytics/getMonthlyMembershipGrowth" + paramString;
 
-      const { data, year } = await ApiHandler.get(endpoint);
-      const formattedData = data.map(
-        (entry: { count: number; month: string }) => {
-          const formattedEntry: {
-            timePoint: string;
-            [year: string]: number | string;
-          } = { timePoint: entry.month };
-          formattedEntry[year] = entry.count;
-          return formattedEntry;
-        }
-      );
-      setComparisonCountData(formattedData);
+      const response = await ApiHandler.get(endpoint);
+
+      if (Array.isArray(response)) {
+        const annualData: Record<string, Record<string, number>> = {};
+        response.forEach((yearDataSet) => {
+          const { data, year } = yearDataSet;
+          annualData[year] = data.reduce(
+            (
+              monthlyCount: Record<string, number>,
+              monthlyData: { month: string; count: number }
+            ) => {
+              return {
+                ...monthlyCount,
+                [monthlyData.month]: monthlyData.count,
+              };
+            },
+            {}
+          );
+        });
+        const formattedData: ComparisonCountData[] = [];
+
+        months.forEach((month) => {
+          const dataSet: ComparisonCountData = { timePoint: month };
+          for (const set in annualData) {
+            const year = annualData[set];
+            if (year[month]) {
+              dataSet[set] = year[month];
+            }
+          }
+          if (Object.keys(dataSet).length > 1) formattedData.push(dataSet);
+        });
+
+        setComparisonCountData(formattedData);
+      } else {
+        const { data, year } = response;
+
+        const formattedData = data.map(
+          (entry: { count: number; month: string }) => {
+            const formattedEntry: {
+              timePoint: string;
+              [year: string]: number | string;
+            } = { timePoint: entry.month };
+            formattedEntry[year] = entry.count;
+            return formattedEntry;
+          }
+        );
+        setComparisonCountData(formattedData);
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
