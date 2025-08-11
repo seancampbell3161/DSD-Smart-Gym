@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { format } from "date-fns/format";
+import { format } from "date-fns";
 
 type Days = {
   [key: string]: string[];
