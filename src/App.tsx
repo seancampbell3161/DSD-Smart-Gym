@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 // Layouts
-import NonMemberLayout from "./layout/nonMemberLayout";
+import NonMemberLayout from "./layout/NonMemberLayout";
 import MemberLayout from "./layout/memberLayout";
 
 // Pages
@@ -17,8 +17,10 @@ import Footer from "./layout/footer";
 
 const nonMemberNav = [
   { label: "Home", to: "/" },
-  { label: "Classes", to: "/nonmember/classes" }
+  { label: "Classes", to: "/nonmember/classes" },
 ];
+
+const adminNav = [{ label: "Dashboard", to: "/admin" }];
 
 const AppContent: React.FC = () => {
   return (
@@ -71,7 +73,14 @@ const AppContent: React.FC = () => {
         />
 
         {/* Admin Dashboard */}
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route
+          path="/admin"
+          element={
+            <NonMemberLayout navItems={adminNav}>
+              <AdminDashboard />
+            </NonMemberLayout>
+          }
+        />
       </Routes>
 
       <Footer />

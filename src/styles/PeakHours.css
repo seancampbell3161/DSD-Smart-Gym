@@ -1,5 +1,5 @@
 .peak-hours-container {
-  width: 90%;
+  width: 100%;
   padding: 40px;
   background-color: white;
   border-radius: 5%;
@@ -18,9 +18,9 @@
 }
 
 .peak-hours-container .time-period-buttons {
-  position: relative;
-  left: 210px;
-  margin-bottom: 20px;
+  display: flex;
+  justify-self: start;
+  margin: 10px 70px 20px 70px;
 }
 
 .heatmap {
