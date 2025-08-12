@@ -8,8 +8,19 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Accordion from "react-bootstrap/Accordion";
 import "../styles/homepage.css";
-import "../styles/HomepageNavbar.css";
-import ApiHandler from "../utils/ApiHandler"; 
+import "../styles/HomepageNavBar.css";
+import ApiHandler from "../utils/ApiHandler";
+
+type UserRole = "admin" | "member" | "trainer";
+
+interface LoginResponse {
+  authToken: string;
+  user?: {
+    email: string;           
+    role: UserRole;
+    gym_id?: string;
+  };
+}
 
 const Homepage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
