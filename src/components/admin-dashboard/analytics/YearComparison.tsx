@@ -5,7 +5,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import type {
   TwoSelectedYears,
   TwoYearInputProps,
-} from "../../types/Analytics.interface.ts";
+} from "../../../types/Analytics.interface.ts";
 
 const YearComparison: React.FC<TwoYearInputProps> = ({
   pattern,

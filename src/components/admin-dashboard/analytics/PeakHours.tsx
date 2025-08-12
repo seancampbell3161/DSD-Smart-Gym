@@ -5,9 +5,9 @@ import { format } from "date-fns";
 import type {
   PeakHoursData,
   TimeOptions,
-} from "../../types/Analytics.interface";
-import "../../styles/PeakHours.css";
-import ApiHandler from "../../utils/ApiHandler";
+} from "../../../types/Analytics.interface";
+import "../../../styles/PeakHours.css";
+import ApiHandler from "../../../utils/ApiHandler";
 
 const PeakHours: React.FC = () => {
   const [timePeriod, setTimePeriod] = useState<TimeOptions>({

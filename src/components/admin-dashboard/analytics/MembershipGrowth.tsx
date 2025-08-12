@@ -4,16 +4,16 @@ import type {
   coordinateProps,
   ComparisonCountData,
   TwoSelectedYears,
-} from "../../types/Analytics.interface.ts";
+} from "../../../types/Analytics.interface.ts";
 import TimePeriodButtons from "./TimePeriodButtons";
 import MetricCard from "./MetricCard";
 import SingleLineChart from "./SingleLineChart";
-import MetricLayout from "../../layout/MetricLayout.tsx";
+import MetricLayout from "../../../layout/MetricLayout.tsx";
 import YearlyRange from "./YearlyRange.tsx";
 import YearComparison from "./YearComparison.tsx";
 import MultiLineAreaChart from "./MultiLineAreaChart.tsx";
 import ComparisonTable from "./ComparisonTable.tsx";
-import ApiHandler from "../../utils/ApiHandler.ts";
+import ApiHandler from "../../../utils/ApiHandler.ts";
 
 const MembershipGrowth: React.FC = () => {
   const [timePeriod, setTimePeriod] = useState<TimeOptions>({

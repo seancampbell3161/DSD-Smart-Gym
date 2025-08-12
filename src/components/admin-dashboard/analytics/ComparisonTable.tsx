@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type {
   ComparisonCountData,
   ComparisonTableProps,
-} from "../../types/Analytics.interface";
+} from "../../../types/Analytics.interface";
 
 const ComparisonTable: React.FC<ComparisonTableProps> = ({ title, data }) => {
   const [headers, setHeaders] = useState<string[]>([""]);

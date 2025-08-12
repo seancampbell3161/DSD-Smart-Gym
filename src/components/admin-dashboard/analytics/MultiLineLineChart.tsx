@@ -8,7 +8,7 @@ import {
   Legend,
   Line,
 } from "recharts";
-import type { ComparisonCountData } from "../../types/Analytics.interface.ts";
+import type { ComparisonCountData } from "../../../types/Analytics.interface.ts";
 import { useEffect, useState } from "react";
 
 const MultiLineLineChart: React.FC<{ data: ComparisonCountData[] }> = ({

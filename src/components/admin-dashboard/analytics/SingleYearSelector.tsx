@@ -5,7 +5,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import type {
   OneSelectedYear,
   OneYearInputProps,
-} from "../../types/Analytics.interface.ts";
+} from "../../../types/Analytics.interface.ts";
 
 const SingleYearSelector: React.FC<OneYearInputProps> = ({
   pattern,

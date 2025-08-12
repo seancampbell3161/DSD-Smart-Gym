@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import type { TimeOptions } from "../../types/Analytics.interface.ts";
+import type { TimeOptions } from "../../../types/Analytics.interface.ts";
 import type {
   ComparisonCountData,
   TwoSelectedYears,
   OneSelectedYear,
-} from "../../types/Analytics.interface.ts";
+} from "../../../types/Analytics.interface.ts";
 import TimePeriodButtons from "./TimePeriodButtons";
-import MetricLayout from "../../layout/MetricLayout.tsx";
+import MetricLayout from "../../../layout/MetricLayout.tsx";
 import MultiLineLineChart from "./MultiLineLineChart.tsx";
 import YearlyRange from "./YearlyRange.tsx";
 import SingleYearSelector from "./SingleYearSelector.tsx";
 import ComparisonTable from "./ComparisonTable.tsx";
-import ApiHandler from "../../utils/ApiHandler.ts";
+import ApiHandler from "../../../utils/ApiHandler.ts";
 
 interface InputEntry {
   year: string;
