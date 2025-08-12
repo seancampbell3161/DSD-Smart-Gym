@@ -36,3 +36,9 @@ export interface TwoSelectedYears {
 export type TwoYearInputProps = {
   setSelectedYears: React.Dispatch<React.SetStateAction<TwoSelectedYears>>;
 } & InvalidYearFormatProps;
+
+export interface PeakHoursData {
+  dayOfWeek: string;
+  hour: number;
+  count:number;
+}
