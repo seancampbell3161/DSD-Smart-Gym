@@ -8,7 +8,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Accordion from "react-bootstrap/Accordion";
 import "../styles/homepage.css";
-import "../styles/HomepageNavbar.css";
+import "../styles/HomepageNavBar.css";
 import ApiHandler from "../utils/ApiHandler";
 
 type UserRole = "admin" | "member" | "trainer";
