@@ -1,7 +1,7 @@
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-import type { TimeOptions } from "../../../types/Analytics.interface.ts";
-import "../../../styles/TimePeriodButtons.css";
+import "../../styles/TimePeriodButtons.css";
+import type { TimeOptions } from "../../types/Analytics.interface.ts";
 
 interface TimePeriodButtonProps {
   timePeriod: TimeOptions;
