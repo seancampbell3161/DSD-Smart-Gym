@@ -1,10 +1,9 @@
 import { useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import Modal from "../Modal/Modal";
+import Modal from "../Modal/modal";
 import Alert from 'react-bootstrap/Alert';
 import '../../styles/Classes.css'
-import type { EventClickArg } from "@fullcalendar/core";
 
 interface ClassEvent {
   id: string;
@@ -188,7 +187,7 @@ const [showAlert, setShowAlert] = useState(false);
     title: `${cls.title} (${cls.attendees}/${cls.maxCapacity})`,
     date: `${cls.date}T${cls.time}`,
     extendedProps: cls,
-    color: (cls.attendees ?? 0) >= (cls.maxCapacity ?? 0) ? "red" : "green",
+    color: cls.attendees >= cls.maxCapacity ? "red" : "green",
   }));
 
   const userClasses = userEvents.map((usr) => ({
@@ -196,13 +195,13 @@ const [showAlert, setShowAlert] = useState(false);
     title: `${usr.title}`,
     date: `${usr.date}T${usr.time}`,
     extendedProps: usr,
-    color: (usr.attendees ?? 0) >= (usr.maxCapacity ?? 0) ? "red" : "green",
+    color: usr.attendees >= usr.maxCapacity ? "red" : "green",
   }));
 
   const handleEventClick = (clickInfo: EventClickArg) => {
-    const cls: ClassEvent = clickInfo.event.extendedProps as any as ClassEvent;
+    const cls: ClassEvent = clickInfo.event.extendedProps;
     setSelectedClass(cls);
-    setModalMode((cls.attendees ?? 0) >= (cls.maxCapacity ?? 0) ? "waitlist" : "signup");
+    setModalMode(cls.attendees >= cls.maxCapacity ? "waitlist" : "signup");
   };
 
   const handleModalClose = () => {

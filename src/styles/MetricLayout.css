@@ -20,8 +20,34 @@
 }
 
 .time-period-buttons {
+  display: flex;
   justify-self: start;
-  margin: 0 70px 10px 70px;
+  column-gap: 10px;
+  margin: 10px 70px 0px 70px;
+}
+
+.time-period-buttons input {
+  text-align: center;
+}
+
+.invalid-year {
+  width: 350px;
+  border-radius: 5%;
+  text-align: center;
+  align-content: center;
+  background-color: rgb(255, 209, 209);
+  border: 1px solid red;
+  color: red;
+}
+
+.no-data-alert {
+  width: 350px;
+  border-radius: 5%;
+  text-align: center;
+  align-content: center;
+  background-color: rgb(255, 209, 209);
+  border: 1px solid red;
+  color: red;
 }
 
 .graph {
@@ -34,6 +60,22 @@
 
 .metric-card {
   grid-area: sidebar;
-  width: 300px;
-  transform: translateX(-10%);
+}
+
+.metric-card > div {
+  width: 500px;
+}
+
+.comparison-table {
+  width: 100%;
+  padding: 20px;
+  background-color: white;
+  border-radius: 5%;
+  box-shadow: rgba(0, 0, 0, 0.568) 0px 5px 10px;
+  text-align: center;
+  justify-items: stretch;
+}
+
+.comparison-table th {
+  padding: 0 15px;
 }
