@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AdminDashboardLayout from "../layout/AdminDashboardLayout";
 import Analytics from "../components/admin-dashboard/Analytics";
 import "../styles/AdminDashboard.css";
-import SideNavBar from "../components/admin-dashboard/SideNavBar";
+import SideNavBar from "../layout/SideNavBar";
 import type { View } from "../types/AdminDashboard.interface";
 import AccountManagment from "../components/admin-dashboard/AccountManagement";
 
