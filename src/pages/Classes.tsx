@@ -6,8 +6,8 @@ import yoga from '../assets/yoga-class.png';
 import hiit from '../assets/hiit-class.png';
 import strength from '../assets/strength-training.png';
 import gym from '../assets/gym.png';
-import Calendar from '../components/classes/calendar';
 import '../styles/Classes.css';
+import Calendar from '../components/classes/Calendar';
 
 
 const Classes: React.FC = () => {
@@ -23,7 +23,7 @@ const classList = [
    {
     name: 'Boxing',
     type: 'Intense Cardio',
-    description: 'High-intensity class combining cardio, strength, and technique through punches, combos, and footwork.',
+    description: 'High-intensity class combining cardio, strength. Jab, cross, hook your way to fitness.',
     img: boxing
   },
    {
