@@ -1,207 +1,114 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import Modal from "../Modal/modal";
-import Alert from 'react-bootstrap/Alert';
-import '../../styles/Classes.css'
+
+import Modal from "../Modal/Modal";
+import Alert from "react-bootstrap/Alert";
+import "../../styles/Classes.css";
+import type { EventClickArg } from "@fullcalendar/core";
+import ApiHandler from "../../utils/ApiHandler";
+import { ColorLegend } from "./Legend";
+
 
 interface ClassEvent {
   id: string;
   title: string;
   date: string;
   time: string;
-  maxCapacity?: number;
-  attendees?: number;
-  waitlist?: string[];
-};
-
-interface UserEvent extends ClassEvent { 
-  userId: string;
-  backgroundColor: string;
-  borderColor: string
+  maxCapacity: number;
+  attendees: number;
+  waitlist: number; // now a number, not an array
 }
 
-const initialClasses: ClassEvent[] = [
-  {
-    id: "1",
-    title: "Cycling",
-    date: "2025-07-17",
-    time: "08:00",
-    maxCapacity: 12,
-    attendees: 6,
-    waitlist: [],
-  },
-  {
-    id: "2",
-    title: "Yoga",
-    date: "2025-07-17",
-    time: "10:00",
-    maxCapacity: 10,
-    attendees: 4,
-    waitlist: [],
-  },
-  {
-    id: "3",
-    title: "Boxing",
-    date: "2025-07-17",
-    time: "12:00",
-    maxCapacity: 8,
-    attendees: 8,
-    waitlist: ["User1"],
-  },
-  {
-    id: "4",
-    title: "HIIT",
-    date: "2025-07-17",
-    time: "18:00",
-    maxCapacity: 15,
-    attendees: 14,
-    waitlist: [],
-  },
-  {
-    id: "5",
-    title: "Strength Training",
-    date: "2025-07-17",
-    time: "19:30",
-    maxCapacity: 10,
-    attendees: 10,
-    waitlist: ['user 5'],
-  },
-
-  {
-    id: "6",
-    title: "Yoga",
-    date: "2025-07-18",
-    time: "09:00",
-    maxCapacity: 10,
-    attendees: 5,
-    waitlist: [],
-  },
-  {
-    id: "7",
-    title: "Cycling",
-    date: "2025-07-18",
-    time: "11:00",
-    maxCapacity: 12,
-    attendees: 12,
-    waitlist: ["User2"],
-  },
-  {
-    id: "8",
-    title: "Strength Training",
-    date: "2025-07-18",
-    time: "17:00",
-    maxCapacity: 10,
-    attendees: 3,
-    waitlist: [],
-  },
-  {
-    id: "9",
-    title: "HIIT",
-    date: "2025-07-18",
-    time: "18:30",
-    maxCapacity: 15,
-    attendees: 15,
-    waitlist: ["User3", "User4"],
-  },
-
-  {
-    id: "10",
-    title: "Boxing",
-    date: "2025-07-19",
-    time: "08:30",
-    maxCapacity: 8,
-    attendees: 7,
-    waitlist: [],
-  },
-  {
-    id: "11",
-    title: "Yoga",
-    date: "2025-07-19",
-    time: "10:30",
-    maxCapacity: 10,
-    attendees: 10,
-    waitlist: ["User5"],
-  },
-  {
-    id: "12",
-    title: "Cycling",
-    date: "2025-07-19",
-    time: "13:00",
-    maxCapacity: 12,
-    attendees: 11,
-    waitlist: [],
-  },
-  {
-    id: "13",
-    title: "Strength Training",
-    date: "2025-07-19",
-    time: "17:00",
-    maxCapacity: 10,
-    attendees: 9,
-    waitlist: [],
-  },
-  {
-    id: "14",
-    title: "HIIT",
-    date: "2025-07-19",
-    time: "18:30",
-    maxCapacity: 15,
-    attendees: 15,
-    waitlist: ["User6"],
-  },
-];
-
-const userEvents: UserEvent[] = [
-  {
-    id: 'u1',
-    title: '✔ My Class: HIIT',
-    date: '2025-07-17',
-    time: "18:00",
-    userId: 'u2',
-    backgroundColor: '#10b981',
-    borderColor: '#10b981'
-  },
-  {
-    id: 'u2',
-    title: '✔ My Class: Strength Training',
-    date: '2025-07-18',
-     time: "17:00",
-    userId: 'u2',
-    backgroundColor: '#10b981',
-    borderColor: '#10b981'
-  }
-];
-
-
 export default function Calendar() {
-  const [classes, setClasses] = useState<ClassEvent[]>(initialClasses);
+  const [classes, setClasses] = useState<ClassEvent[]>([]);
+  const [userClasses, setUserClasses] = useState<ClassEvent[]>([]);
   const [selectedClass, setSelectedClass] = useState<ClassEvent | null>(null);
   const [modalMode, setModalMode] = useState<"signup" | "waitlist" | null>(null);
-  const [alertMessage, setAlertMessage] = useState('');
-const [alertVariant, setAlertVariant] = useState<'success' | 'danger' | 'warning' | 'info'>('success');
-const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertVariant, setAlertVariant] = useState<"success" | "danger" | "warning" | "info">("success");
+  const [showAlert, setShowAlert] = useState(false);
+  const gymId = localStorage.getItem("gym_id");
 
-  const calendarEvents = classes.map((cls) => ({
-    id: cls.id,
-    title: `${cls.title} (${cls.attendees}/${cls.maxCapacity})`,
-    date: `${cls.date}T${cls.time}`,
-    extendedProps: cls,
-    color: cls.attendees >= cls.maxCapacity ? "red" : "green",
-  }));
+  // Reusable fetch functions
+  const fetchClassesData = async () => {
+    if (!gymId) return;
+    try {
+      const data = await ApiHandler.get(`/classes/gym/${gymId}`);
+      const formatted = data.allClasses.map((cls: any) => ({
+        id: cls._id,
+        title: cls.title,
+        date: cls.date.split("T")[0],
+        time: cls.start_time,
+        maxCapacity: cls.capacity,
+        attendees: cls.attendees,
+        waitlist: cls.waitlistCount ?? 0,
+      }));
+      setClasses(formatted);
+    } catch (err: any) {
+      console.error("❌ Failed to fetch classes:", err.message);
+    }
+  };
 
-  const userClasses = userEvents.map((usr) => ({
-    id: usr.id,
-    title: `${usr.title}`,
-    date: `${usr.date}T${usr.time}`,
-    extendedProps: usr,
-    color: usr.attendees >= usr.maxCapacity ? "red" : "green",
-  }));
+
+  const fetchUserClassesData = async () => {
+    try {
+      const data = await ApiHandler.get("/classes/userClasses");
+      const formatted = data.userClasses.map((cls: any) => ({
+        id: cls._id,
+        title: cls.title,
+        date: cls.date.split("T")[0],
+        time: cls.start_time,
+        maxCapacity: cls.capacity,
+        attendees: cls.attendees,
+        waitlist: cls.waitlistCount ?? 0,
+      }));
+      setUserClasses(formatted);
+    } catch (err) {
+      console.error("Failed to fetch user classes:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchClassesData();
+    fetchUserClassesData();
+  }, []);
+
+  const userClassIds = new Set(userClasses.map((cls) => cls.id));
+
+  const calendarEvents = [
+    ...classes
+      .filter((cls) => !userClassIds.has(cls.id))
+      .map((cls) => ({
+        id: cls.id,
+        title: `${cls.title} (${cls.attendees}/${cls.maxCapacity})`,
+        date: `${cls.date}T${cls.time}`,
+        extendedProps: cls,
+        color: cls.attendees >= cls.maxCapacity ? "red" : "green",
+      })),
+    ...userClasses.map((cls) => ({
+      id: `user-${cls.id}`,
+      title: `✔ My Class: ${cls.title}`,
+      date: `${cls.date}T${cls.time}`,
+      extendedProps: cls,
+      color: "#2563EB",
+    })),
+  ];
+
 
   const handleEventClick = (clickInfo: EventClickArg) => {
     const cls: ClassEvent = clickInfo.event.extendedProps;
     setSelectedClass(cls);
-    setModalMode(cls.attendees >= cls.maxCapacity ? "waitlist" : "signup");
+
+    setModalMode(userClassIds.has(cls.id)
+      ? "signup" // user is already booked, can leave
+      : cls.attendees >= cls.maxCapacity
+        ? "waitlist"
+        : "signup"
+    );
+
   };
 
   const handleModalClose = () => {
@@ -209,85 +116,92 @@ const [showAlert, setShowAlert] = useState(false);
     setModalMode(null);
   };
 
-  const handleModalSubmit = (name: string) => {
+  const handleModalSubmit = async () => {
     if (!selectedClass) return;
+    const userId = localStorage.getItem("email");
+    if (!userId) return;
 
-    if (modalMode === "signup") {
-      setClasses((prev) =>
-        prev.map((item) =>
-          item.id === selectedClass.id && item.attendees! < item.maxCapacity!
-            ? { ...item, attendees: item.attendees! + 1 }
-            : item
-        )
-      );
-      setAlertMessage("You are registered!");
-    setAlertVariant("success");
-    setShowAlert(true);
-  } else if (modalMode === "waitlist") {
-    const existingClass = classes.find((cls) => cls.id === selectedClass.id);
-    if (!existingClass) return;
+    try {
+      await ApiHandler.post(`/classes/${selectedClass.id}/join`, { user_id: userId });
+      await fetchClassesData();
+      await fetchUserClassesData();
 
-      const isAlreadyOnWaitlist = existingClass.waitlist?.includes(name);
-
-      if (isAlreadyOnWaitlist) {
-      const position = existingClass.waitlist?.indexOf(name)! + 1;
-      setAlertMessage(`You are already on the waitlist.\nYour position: #${position}`);
-      setAlertVariant("warning");
-    } else {
-        setClasses((prev) =>
-          prev.map((item) =>
-            item.id === selectedClass.id
-              ? { ...item, waitlist: [...(item.waitlist || []), name] }
-              : item
-          )
-        );
-          setAlertMessage(`${name} has been added to the waitlist.`);
-      setAlertVariant("info");
+      setAlertMessage("Successfully joined!");
+      setAlertVariant("success");
+      setShowAlert(true);
+    } catch (err: any) {
+      setAlertMessage(err?.response?.data?.error || "Failed to join class.");
+      setAlertVariant("danger");
+      setShowAlert(true);
     }
-    setShowAlert(true);
-  }
 
-  handleModalClose();
+    handleModalClose();
+    setTimeout(() => setShowAlert(false), 3000);
+  };
 
-  // Optional: auto-hide alert after 3s
-  setTimeout(() => setShowAlert(false), 3000);
-};
+  const handleLeaveClass = async () => {
+    if (!selectedClass) return;
+    const userId = localStorage.getItem("email");
+    if (!userId) return;
+
+    try {
+      await ApiHandler.post(`/classes/${selectedClass.id}/leave`, { user_id: userId });
+      await fetchClassesData();
+      await fetchUserClassesData();
+
+      setAlertMessage("You have left the class.");
+      setAlertVariant("info");
+      setShowAlert(true);
+    } catch (err: any) {
+      setAlertMessage(err?.response?.data?.error || "Failed to leave class.");
+      setAlertVariant("danger");
+      setShowAlert(true);
+    }
+
+    handleModalClose();
+    setTimeout(() => setShowAlert(false), 3000);
+  };
 
   return (
-    <div style={{
-      margin: '10px',
-    }}>
+    <div style={{ margin: "10px" }}>
       <h1>Classes</h1>
+      <ColorLegend />
       <FullCalendar
         plugins={[dayGridPlugin]}
         initialView="dayGridMonth"
-        weekends={true}
-        events={[...calendarEvents, ...userClasses]}
+        weekends
+        events={calendarEvents}
         eventClick={handleEventClick}
         eventDidMount={(info) => {
           info.el.style.cursor = "pointer";
           info.el.style.whiteSpace = "normal";
           info.el.style.wordBreak = "break-word";
         }}
-        />
+      />
 
       <Modal
         isOpen={!!selectedClass && !!modalMode}
         onClose={handleModalClose}
         onSubmit={handleModalSubmit}
+        onLeave={userClassIds.has(selectedClass?.id ?? "") ? handleLeaveClass : undefined}
         mode={modalMode || "signup"}
         classTitle={selectedClass?.title || ""}
-        waitlistLength={selectedClass?.waitlist?.length || 0}
-        />
-       {showAlert && (
-  <div className="alert-overlay">
-    <div className="alert-wrapper">
-      <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>
-        {alertMessage}
-      </Alert>
-    </div>
-  </div>
-)}
+        waitlistLength={selectedClass?.waitlist ?? 0}
+      />
+
+      {showAlert && (
+        <div className="alert-overlay">
+          <div className="alert-wrapper">
+            <Alert
+              variant={alertVariant}
+              onClose={() => setShowAlert(false)}
+              dismissible
+            >
+              {alertMessage}
+            </Alert>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
