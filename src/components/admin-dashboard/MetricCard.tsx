@@ -1,5 +1,5 @@
-import type { MetricCardProps } from "../../../types/MetricCard.interface";
-import "../../../styles/MetricCard.css";
+import type { MetricCardProps } from "../../types/MetricCard.interface";
+import "../../styles/MetricCard.css";
 
 const MetricCard: React.FC<MetricCardProps> = ({
   title,
