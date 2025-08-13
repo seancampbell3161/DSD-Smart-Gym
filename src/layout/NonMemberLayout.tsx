@@ -1,24 +1,15 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 import Navbar from "./navbar";
 
-interface NavItem {
-  label: string;
-  to: string;
-}
+interface NavItem { label: string; to: string; }
+type Props = { navItems?: NavItem[] };
 
-interface NonMemberLayoutProps {
-  children: React.ReactNode;
-  navItems: NavItem[];
-}
-
-const NonMemberLayout: React.FC<NonMemberLayoutProps> = ({
-  children,
-  navItems,
-}) => {
+const NonMemberLayout: React.FC<Props> = ({ navItems }) => {
   return (
     <>
-      <Navbar navItem={navItems} />
-      {children}
+      <Navbar navItem={navItems ?? []} />
+      <Outlet />
     </>
   );
 };

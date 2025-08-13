@@ -1,0 +1,310 @@
+/* =========================
+   Palette & Page Scaffold
+   ========================= */
+.admin-classes {
+  --bg: #6e6e6e;
+  --panel: rgba(96, 91, 91, 0.75);
+  --panel-2: rgba(96, 91, 91, 0.88);
+  --lime: #bcfd4c;   /* main lime */
+  --lime2: #c7ff59;  /* accent lime */
+  --ink: #0b0f0d;
+  --text: whitesmoke;
+}
+
+.admin-classes {
+  background: var(--bg);
+  min-height: 100vh;
+  padding: 16px;
+}
+
+/* =========================
+   Header (keep structure)
+   ========================= */
+.admin-classes__header {
+  background: var(--lime) !important;
+  color: var(--ink) !important;
+  border-radius: 10px;
+  padding: 16px 20px !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.admin-classes__header h2 {
+  color: var(--ink) !important;
+  margin: 0;
+  font-weight: 800;
+}
+
+/* Lime primary button for + New Class */
+.admin-classes .btn-primary {
+  background: var(--lime) !important;
+  border: 1px solid var(--lime) !important;
+  color: var(--ink) !important;
+  font-weight: 700;
+}
+.admin-classes .btn-primary:hover {
+  background: var(--lime2) !important;
+  border-color: var(--lime2) !important;
+}
+
+/* =========================
+   Table (keep structure)
+   ========================= */
+.admin-classes__tablewrap {
+  width: calc(100vw - 32px); /* fills screen minus page padding */
+  margin: 0 auto 8px;
+  background: var(--panel);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.admin-classes__table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text);
+  table-layout: auto;
+}
+.admin-classes__table thead th {
+  background: var(--panel-2);
+  color: var(--text);
+  padding: 12px 14px;
+  font-weight: 700;
+}
+.admin-classes__table tbody td {
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.admin-classes__table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Buttons in Actions column */
+.admin-classes__actions .btn { font-weight: 700; }
+
+/* Delete -> lime outline (override Bootstrap .btn-danger) */
+.admin-classes .btn-danger {
+  background: transparent !important;
+  color: var(--lime) !important;
+  border: 1px solid var(--lime) !important;
+  box-shadow: none !important;
+}
+.admin-classes .btn-danger:hover {
+  background: var(--lime) !important;
+  color: var(--ink) !important;
+}
+
+/* Edit / Cancel (outline) */
+.admin-classes__actions .btn:not(.btn-danger) {
+  background: transparent;
+  color: var(--lime);
+  border: 1px solid var(--lime);
+}
+.admin-classes__actions .btn:not(.btn-danger):hover {
+  background: var(--lime);
+  color: var(--ink);
+}
+
+/* =========================
+   Schedule Preview / Calendar
+   (keep structure)
+   ========================= */
+.admin-classes__calendarwrap {
+  width: calc(100vw - 32px);
+  margin: 24px auto 0;
+}
+.admin-classes__scheduleTitle {
+  background: var(--lime);
+  color: var(--ink);
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  text-align: left;
+}
+.admin-classes__calendarbox {
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 12px;
+  overflow: hidden; /* prevent 1px overflow on some zoom levels */
+}
+
+/* FullCalendar: fill width, remove inner scroll, make it taller */
+.admin-classes__calendarbox .fc,
+.admin-classes__calendarbox .fc-scrollgrid,
+.admin-classes__calendarbox .fc-daygrid,
+.admin-classes__calendarbox .fc-daygrid-body,
+.admin-classes__calendarbox .fc-daygrid-body table {
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+.admin-classes__calendarbox .fc-view-harness {
+  height: auto !important;
+  min-height: 980px !important;  /* taller calendar */
+}
+.admin-classes__calendarbox .fc-scrollgrid {
+  height: auto !important;
+}
+.admin-classes__calendarbox .fc-scroller,
+.admin-classes__calendarbox .fc-scroller-liquid-absolute {
+  overflow: visible !important;
+  position: static !important;
+}
+.admin-classes__calendarbox .fc-daygrid-body,
+.admin-classes__calendarbox .fc-timegrid-body {
+  min-height: 980px !important;
+}
+
+/* Palette polish */
+.admin-classes__calendarbox .fc-theme-standard td,
+.admin-classes__calendarbox .fc-theme-standard th {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.admin-classes__calendarbox .fc-toolbar-title { color: var(--text); }
+.admin-classes__calendarbox .fc-daygrid-day-number,
+.admin-classes__calendarbox .fc-col-header-cell-cushion {
+  color: var(--text);
+  opacity: 0.9;
+}
+.admin-classes__calendarbox .fc-button {
+  background: #605b5b;
+  border: 1px solid var(--lime);
+  color: var(--lime);
+}
+.admin-classes__calendarbox .fc-button:hover {
+  background: var(--lime);
+  color: var(--ink);
+}
+
+/* =========================
+   Modal (Create/Edit/Cancel)
+   ========================= */
+.admin-classes .modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.admin-classes .modal-card {
+  width: 760px;
+  max-width: calc(100vw - 48px);
+  background: rgba(96, 91, 91, 0.9); /* match panels */
+  color: var(--text);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+  overflow: hidden; /* keep rounded header corners */
+}
+
+/* Lime header bar on modal */
+.admin-classes .modal-card > h3 {
+  margin: 0;
+  padding: 14px 16px;
+  background: var(--lime);
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 1.2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Two-column form grid */
+.admin-classes .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 16px;
+}
+.admin-classes .form-grid .full {
+  grid-column: 1 / -1;
+}
+
+.admin-classes .form-grid label {
+  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--text);
+  opacity: 0.95;
+}
+
+/* Inputs & textareas */
+.admin-classes .form-grid input,
+.admin-classes .form-grid textarea {
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+.admin-classes .form-grid input::placeholder,
+.admin-classes .form-grid textarea::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+.admin-classes .form-grid input:focus,
+.admin-classes .form-grid textarea:focus {
+  border-color: var(--lime);
+  box-shadow: 0 0 0 3px rgba(188, 253, 76, 0.25);
+  background: rgba(0, 0, 0, 0.28);
+}
+
+/* Modal actions */
+.admin-classes .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 16px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.admin-classes .modal-actions .btn {
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 8px 14px;
+}
+
+/* Primary (Create/Save) */
+.admin-classes .modal-actions .btn-primary {
+  background: var(--lime) !important;
+  border: 1px solid var(--lime) !important;
+  color: var(--ink) !important;
+}
+.admin-classes .modal-actions .btn-primary:hover {
+  background: var(--lime2) !important;
+  border-color: var(--lime2) !important;
+}
+
+/* Neutral Close */
+.admin-classes .modal-actions .btn:not(.btn-primary):not(.btn-danger) {
+  background: transparent;
+  color: var(--lime);
+  border: 1px solid var(--lime);
+}
+.admin-classes .modal-actions .btn:not(.btn-primary):not(.btn-danger):hover {
+  background: var(--lime);
+  color: var(--ink);
+}
+
+/* Danger (Confirm Cancel) */
+.admin-classes .modal-actions .btn-danger {
+  background: transparent !important;
+  color: var(--lime) !important;
+  border: 1px solid var(--lime) !important;
+}
+.admin-classes .modal-actions .btn-danger:hover {
+  background: var(--lime) !important;
+  color: var(--ink) !important;
+}
+
+/* Small screens: stack form */
+@media (max-width: 640px) {
+  .admin-classes .form-grid { grid-template-columns: 1fr; }
+}

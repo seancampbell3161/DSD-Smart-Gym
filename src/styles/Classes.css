@@ -17,3 +17,13 @@
 .alert-wrapper {
   pointer-events: auto;
 }
+/* Make the calendar fill the screen under your page header/navbar.
+   Adjust the 170px if your header+page title is taller/shorter. */
+/* .classes-calendar-wrapper {
+  height: calc(100vh - 170px);
+} */
+
+/* Let FullCalendar fully occupy the wrapper height */
+/* .fc .fc-view-harness {
+  height: 100% !important;
+} */
