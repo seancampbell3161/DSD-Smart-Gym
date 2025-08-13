@@ -8,18 +8,13 @@
 
 .heatmap-container {
   display: flex;
-  justify-content: space-evenly;
+  /* align-items: center; */
+  justify-content: center;
   column-gap: 50px;
 }
 
 #peak-hours-title {
   text-align: center;
-  margin-bottom: 20px;
-}
-
-.peak-hours-container .time-period-buttons {
-  position: relative;
-  left: 210px;
   margin-bottom: 20px;
 }
 

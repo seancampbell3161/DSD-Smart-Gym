@@ -12,6 +12,7 @@ import ApiHandler from "../../utils/ApiHandler";
 import { ColorLegend } from "./Legend";
 
 
+
 interface ClassEvent {
   id: string;
   title: string;
@@ -71,6 +72,7 @@ export default function Calendar() {
     }
   };
 
+
   useEffect(() => {
     fetchClassesData();
     fetchUserClassesData();
@@ -98,9 +100,11 @@ export default function Calendar() {
   ];
 
 
+
   const handleEventClick = (clickInfo: EventClickArg) => {
-    const cls: ClassEvent = clickInfo.event.extendedProps;
+    const cls: ClassEvent = clickInfo.event.extendedProps as any as ClassEvent;
     setSelectedClass(cls);
+
 
     setModalMode(userClassIds.has(cls.id)
       ? "signup" // user is already booked, can leave
@@ -109,7 +113,7 @@ export default function Calendar() {
         : "signup"
     );
 
-  };
+
 
   const handleModalClose = () => {
     setSelectedClass(null);
