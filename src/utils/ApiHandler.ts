@@ -10,33 +10,17 @@ const getAuthHeader = (): Headers => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-// ✅ Improved error handling to avoid crashing on non-JSON responses
 const handleResponse = async (res: Response) => {
-  const contentType = res.headers.get("content-type");
-
+  const data = await res.json();
   if (!res.ok) {
-    if (contentType && contentType.includes("application/json")) {
-      const data = await res.json();
-      throw new Error(data.error || data.message || "An error occurred");
-    } else {
-      const text = await res.text();
-      throw new Error(`❌ Server returned non-JSON error: ${text}`);
-    }
+    throw new Error(data.error || data.message || "An error occurred");
   }
-
-  if (contentType && contentType.includes("application/json")) {
-    return res.json();
-  } else {
-    return res.text(); // fallback if response is plain text or HTML
-  }
+  return data;
 };
 
 const ApiHandler = {
   async get(endpoint: string) {
-    const url = `${API_BASE_URL}${endpoint}`;
-    console.log("📤 GET:", url);
-
-    const res = await fetch(url, {
+    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -47,10 +31,7 @@ const ApiHandler = {
   },
 
   async post(endpoint: string, body: any) {
-    const url = `${API_BASE_URL}${endpoint}`;
-    console.log("📤 POST:", url, body);
-
-    const res = await fetch(url, {
+    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -62,10 +43,7 @@ const ApiHandler = {
   },
 
   async put(endpoint: string, body: any) {
-    const url = `${API_BASE_URL}${endpoint}`;
-    console.log("📤 PUT:", url, body);
-
-    const res = await fetch(url, {
+    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -77,10 +55,7 @@ const ApiHandler = {
   },
 
   async delete(endpoint: string) {
-    const url = `${API_BASE_URL}${endpoint}`;
-    console.log("📤 DELETE:", url);
-
-    const res = await fetch(url, {
+    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -91,28 +66,18 @@ const ApiHandler = {
   },
 
   async login(email: string, password: string) {
-    const loginUrl = `${API_BASE_URL}/users/login`;
-    console.log("🔐 Login URL:", loginUrl);
-
-    const res = await fetch(loginUrl, {
+    const res = await fetch(`${API_BASE_URL}/users/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
 
-    const text = await res.text();
-    console.log("🧾 Raw login response:", text);
+    const data = await handleResponse(res);
 
-    try {
-      const data = JSON.parse(text);
+    if (data.authToken) localStorage.setItem("token", data.authToken);
+    if (data.gym_id) localStorage.setItem("gym_id", data.gym_id);
 
-      if (data.authToken) localStorage.setItem("token", data.authToken);
-      if (data.gym_id) localStorage.setItem("gym_id", data.gym_id);
-
-      return data;
-    } catch (err) {
-      throw new Error("❌ Failed to parse login response as JSON.");
-    }
+    return data;
   },
 };
 

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
-import ApiHandler from "../../utils/ApiHandler";
 
 interface QRModalProps {
   isOpen: boolean;
   onClose: () => void;
   gymId: string;
+  token: string;
 }
 
-const QRModal: React.FC<QRModalProps> = ({ isOpen, onClose, gymId }) => {
+const QRModal: React.FC<QRModalProps> = ({ isOpen, onClose, gymId, token }) => {
   const [qrCodeValue, setQrCodeValue] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -16,20 +16,34 @@ const QRModal: React.FC<QRModalProps> = ({ isOpen, onClose, gymId }) => {
     if (!isOpen) return;
 
     const fetchQRCode = async () => {
-      console.log("🌐 VITE_API_URL:", import.meta.env.VITE_API_URL);
-
       try {
-        const data = await ApiHandler.post("/access/generateQRCode", {
-          gym_id: gymId,
+        console.log("📤 Sending token:", token);
+        console.log("📤 Sending gym ID:", gymId);
+
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/access/generateQRCode`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ gym_id: gymId }),
         });
+
+        const data = await res.json();
+        console.log("📦 QR FETCH RESPONSE:", data);
+
+        if (!res.ok) {
+          throw new Error(data.error || "Failed to generate QR code.");
+        }
 
         const rawQr = data.qrCode;
 
         if (typeof rawQr === "string") {
-          setQrCodeValue(rawQr);
+          setQrCodeValue(rawQr); // case: qrCode is string
         } else if (typeof rawQr === "object" && rawQr.qr_code) {
-          setQrCodeValue(rawQr.qr_code);
+          setQrCodeValue(rawQr.qr_code); // case: qrCode.qr_code
         } else {
+          console.error("❌ Unexpected QR structure:", data);
           throw new Error("QR code missing or malformed.");
         }
 
@@ -42,14 +56,25 @@ const QRModal: React.FC<QRModalProps> = ({ isOpen, onClose, gymId }) => {
     };
 
     fetchQRCode();
-  }, [isOpen, gymId]);
+  }, [isOpen, gymId, token]);
 
   const handleCheckInOut = async () => {
     try {
-      const data = await ApiHandler.post("/access/checkInOut", {
-        gym_id: gymId,
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/access/checkInOut`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ gym_id: gymId }),
       });
-      alert(data.message || "Check-in/out successful.");
+
+      const data = await res.json();
+      if (res.ok) {
+        alert(data.message || "Check-in/out successful.");
+      } else {
+        alert(data.error || "Check-in/out failed.");
+      }
     } catch (err) {
       console.error("Check-in/out error:", err);
       alert("Error during check-in/out.");

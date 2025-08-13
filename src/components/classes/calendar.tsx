@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+
 import Modal from "../Modal/Modal";
 import Alert from "react-bootstrap/Alert";
 import "../../styles/Classes.css";
 import type { EventClickArg } from "@fullcalendar/core";
 import ApiHandler from "../../utils/ApiHandler";
 import { ColorLegend } from "./Legend";
+
 
 interface ClassEvent {
   id: string;
@@ -49,6 +51,7 @@ export default function Calendar() {
       console.error("❌ Failed to fetch classes:", err.message);
     }
   };
+
 
   const fetchUserClassesData = async () => {
     try {
@@ -94,15 +97,18 @@ export default function Calendar() {
     })),
   ];
 
+
   const handleEventClick = (clickInfo: EventClickArg) => {
-    const cls: ClassEvent = clickInfo.event.extendedProps as any as ClassEvent;
+    const cls: ClassEvent = clickInfo.event.extendedProps;
     setSelectedClass(cls);
+
     setModalMode(userClassIds.has(cls.id)
       ? "signup" // user is already booked, can leave
       : cls.attendees >= cls.maxCapacity
         ? "waitlist"
         : "signup"
     );
+
   };
 
   const handleModalClose = () => {

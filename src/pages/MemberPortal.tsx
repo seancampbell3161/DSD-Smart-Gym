@@ -66,6 +66,12 @@ const MemberPortal: React.FC = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("gym_id");
+    navigate("/");
+  };
+
   // Auto-trigger QR + Check-In when modal opens
   useEffect(() => {
     if (showQRModal) {
@@ -75,6 +81,10 @@ const MemberPortal: React.FC = () => {
 
   return (
     <div className="member-dashboard">
+      {/* Top-right Logout */}
+      <button className="logout-btn" onClick={handleLogout}>
+        Logout
+      </button>
 
       {/* Fullscreen Hero Section */}
       <div className="hero-container">

@@ -8,7 +8,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Accordion from "react-bootstrap/Accordion";
 import "../styles/homepage.css";
-import "../styles/HomepageNavbar.css";
+import "../styles/HomepageNavBar.css";
 import ApiHandler from "../utils/ApiHandler";
 
 type UserRole = "admin" | "member" | "trainer";
@@ -26,44 +26,30 @@ const Homepage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [message, setMessage] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    setMessage("");
-    setLoading(true);
 
     try {
-      // Backend should return: { authToken, user: { email, role, gym_id? } }
-      const data = (await ApiHandler.login(email, password)) as LoginResponse;
+      const data = await ApiHandler.login(email, password); 
 
-      const token = data?.authToken;
-      const role = data?.user?.role;
-      const userEmail = data?.user?.email;
-      const gym_id = data?.user?.gym_id;
+      const token = data.authToken;
+      const gym_id = data.gym_id;
 
-      if (!token || !role || !userEmail) {
-        throw new Error("Missing fields from server (authToken, user.email, user.role).");
+      if (!token || !gym_id) {
+        throw new Error("Missing login credentials from server");
       }
 
-  
       localStorage.setItem("token", token);
-      localStorage.setItem("role", role);
-      localStorage.setItem("email", userEmail);
-      if (gym_id) localStorage.setItem("gym_id", String(gym_id));
-
+      localStorage.setItem("gym_id", gym_id);
       setMessage("✅ Logged in successfully!");
       setEmail("");
       setPassword("");
-
-      
-      navigate(role === "admin" ? "/admin" : "/member", { replace: true });
+      navigate("/member");
     } catch (err: any) {
       console.error("Login error:", err);
-      setMessage(`❌ Login failed: ${err?.message || "Unknown error"}`);
-    } finally {
-      setLoading(false);
+      setMessage(`❌ Login failed: ${err.message}`);
     }
   };
 
@@ -100,8 +86,8 @@ const Homepage: React.FC = () => {
                   />
                 </Form.Group>
 
-                <Button variant="dark" type="submit" id="submit-button" disabled={loading}>
-                  {loading ? "Logging in…" : "Log in"}
+                <Button variant="dark" type="submit" id="submit-button">
+                  Log in
                 </Button>
               </Form>
 
