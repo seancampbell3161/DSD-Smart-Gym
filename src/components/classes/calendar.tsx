@@ -99,7 +99,7 @@ export default function Calendar() {
 
 
   const handleEventClick = (clickInfo: EventClickArg) => {
-    const cls: ClassEvent = clickInfo.event.extendedProps;
+    const cls = clickInfo.event.extendedProps as ClassEvent;
     setSelectedClass(cls);
 
     setModalMode(userClassIds.has(cls.id)
