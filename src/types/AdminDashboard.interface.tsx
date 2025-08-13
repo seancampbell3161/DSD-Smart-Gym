@@ -1,1 +1,1 @@
-export type View = "Analytics" | "Account Management" | "Class Managment";
+export type View = "Analytics" | "Account Management" | "Class Managment" | "Inventory Management";
