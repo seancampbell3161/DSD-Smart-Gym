@@ -23,8 +23,9 @@
   margin: 20px 5px;
 }
 
-.side-nav-bar ul:hover {
+.side-nav-bar li:hover {
   color: #f1f1f1;
+  cursor: pointer;
 }
 
 .side-nav-bar ul > .selected {
