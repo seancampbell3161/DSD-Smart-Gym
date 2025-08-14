@@ -1,6 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-
+import { Routes, Route, Navigate } from "react-router-dom";
 
 // Layouts
 import NonMemberLayout from "./layout/NonMemberLayout";
@@ -13,6 +12,7 @@ import Classes from "./pages/Classes";
 import CafeOrdering from "./pages/CafeOrdering";
 import AdminDashboard from "./pages/AdminDashboard";
 import AboutUs from "./pages/AboutUs";
+import AdminClasses from "./pages/AdminClasses";
 
 // Global Footer
 import Footer from "./layout/footer";
@@ -23,9 +23,25 @@ const nonMemberNav = [
   { label: "Classes", to: "/nonmember/classes" }
 ];
 
-const adminNav = [{ label: "Dashboard", to: "/admin" }];
+const adminNav = [{ label: "Dashboard", to: "/admin/dashboard" }];
 
 const AppContent: React.FC = () => {
+// ------- Auth helpers -------
+const isAuthed = () => !!localStorage.getItem("authToken");
+const getRole = () => (localStorage.getItem("role") || "").toLowerCase();
+const isAdminOrTrainer = () => {
+  const role = getRole();
+  return role === "admin" || role === "trainer";
+};
+
+// ------- Route Guards -------
+function RequireAuth({ children }: { children: React.ReactNode }) {
+  return isAuthed() ? <>{children}</> : <Navigate to="/" replace />;
+}
+function RequireAdminOrTrainer({ children }: { children: React.ReactNode }) {
+  return isAdminOrTrainer() ? <>{children}</> : <Navigate to="/member" replace />;
+}
+
   return (
     <>
       <Routes>
@@ -59,47 +75,70 @@ const AppContent: React.FC = () => {
 
          />
         {/* Member Portal */}
+        {/* Public */}
+
+        {/* Members (match MemberLayout nav exactly) */}
         <Route
           path="/member"
           element={
-            <MemberLayout>
-              <MemberPortal />
-            </MemberLayout>
+            <RequireAuth>
+              <MemberLayout>
+                <MemberPortal />
+              </MemberLayout>
+            </RequireAuth>
           }
         />
         <Route
           path="/member/classes"
           element={
-            <MemberLayout>
-              <Classes />
-            </MemberLayout>
+            <RequireAuth>
+              <MemberLayout>
+                <Classes />
+              </MemberLayout>
+            </RequireAuth>
           }
         />
         <Route
           path="/member/cafe-ordering"
           element={
-            <MemberLayout>
-              <CafeOrdering />
-            </MemberLayout>
+            <RequireAuth>
+              <MemberLayout>
+                <CafeOrdering />
+              </MemberLayout>
+            </RequireAuth>
           }
         />
 
-        {/* Admin Dashboard */}
+        {/* Aliases to keep older links working */}
+        <Route path="/user" element={<Navigate to="/member" replace />} />
+        <Route path="/classes" element={<Navigate to="/member/classes" replace />} />
+        <Route path="/cafe" element={<Navigate to="/member/cafe-ordering" replace />} />
+
+        {/* Admin/Trainer areas */}
         <Route
-          path="/admin"
+          path="/admin/dashboard"
           element={
-            <NonMemberLayout navItems={adminNav}>
+            <RequireAdminOrTrainer>
               <AdminDashboard />
-            </NonMemberLayout>
+            </RequireAdminOrTrainer>
           }
         />
+        <Route
+          path="/admin/classes"
+          element={
+            <RequireAdminOrTrainer>
+              <AdminClasses />
+            </RequireAdminOrTrainer>
+          }
+        />
+
+        {/* Catch-all */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
       <Footer />
     </>
   );
-};
+}
 
-const App: React.FC = () => <AppContent />;
-
-export default App;
+export default AppContent
