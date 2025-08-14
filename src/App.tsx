@@ -11,16 +11,33 @@ import MemberPortal from "./pages/MemberPortal";
 import Classes from "./pages/Classes";
 import CafeOrdering from "./pages/CafeOrdering";
 import AdminDashboard from "./pages/AdminDashboard";
-import AboutUs from "./pages/AboutUs";
 import AdminClasses from "./pages/AdminClasses";
+import AboutUs from "./pages/AboutUs"; // if you want public About Us
 
 // Global Footer
 import Footer from "./layout/footer";
 
+// ------- Auth helpers -------
+const isAuthed = () => !!localStorage.getItem("authToken");
+const getRole = () => (localStorage.getItem("role") || "").toLowerCase();
+const isAdminOrTrainer = () => {
+  const role = getRole();
+  return role === "admin" || role === "trainer";
+};
+
+// ------- Route Guards -------
+function RequireAuth({ children }: { children: React.ReactNode }) {
+  return isAuthed() ? <>{children}</> : <Navigate to="/" replace />;
+}
+function RequireAdminOrTrainer({ children }: { children: React.ReactNode }) {
+  return isAdminOrTrainer() ? <>{children}</> : <Navigate to="/member" replace />;
+}
+
+// Public nav items
 const nonMemberNav = [
   { label: "Home", to: "/" },
-  { label: "About Us", to: "/nonmember/aboutus"},
-  { label: "Classes", to: "/nonmember/classes" }
+  { label: "About Us", to: "/nonmember/aboutus" },
+  { label: "Classes", to: "/nonmember/classes" },
 ];
 
 const adminNav = [{ label: "Dashboard", to: "/admin/dashboard" }];
@@ -45,39 +62,14 @@ function RequireAdminOrTrainer({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Routes>
-        {/* Public Homepage */}
-        <Route
-          path="/"
-          element={
-            <NonMemberLayout navItems={nonMemberNav}>
-              <Homepage />
-            </NonMemberLayout>
-          }
-        />
+        {/* ---------- Public / Non-Member routes ---------- */}
+        <Route element={<NonMemberLayout navItems={nonMemberNav} />}>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/nonmember/aboutus" element={<AboutUs />} />
+          <Route path="/nonmember/classes" element={<Classes />} />
+        </Route>
 
-        {/* Non-member Classes */}
-        <Route
-          path="/nonmember/classes"
-          element={
-            <NonMemberLayout navItems={nonMemberNav}>
-              <Classes />
-            </NonMemberLayout>
-          }
-        />
-        {/*About Us */}
-          <Route
-          path="/nonmember/aboutus"
-          element={
-            <NonMemberLayout navItems={nonMemberNav}>
-              <AboutUs />
-            </NonMemberLayout>
-          }
-
-         />
-        {/* Member Portal */}
-        {/* Public */}
-
-        {/* Members (match MemberLayout nav exactly) */}
+        {/* ---------- Members ---------- */}
         <Route
           path="/member"
           element={
@@ -109,12 +101,12 @@ function RequireAdminOrTrainer({ children }: { children: React.ReactNode }) {
           }
         />
 
-        {/* Aliases to keep older links working */}
+        {/* Aliases for backward compatibility */}
         <Route path="/user" element={<Navigate to="/member" replace />} />
         <Route path="/classes" element={<Navigate to="/member/classes" replace />} />
         <Route path="/cafe" element={<Navigate to="/member/cafe-ordering" replace />} />
 
-        {/* Admin/Trainer areas */}
+        {/* ---------- Admin / Trainer ---------- */}
         <Route
           path="/admin/dashboard"
           element={
