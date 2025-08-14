@@ -4,7 +4,8 @@ import Analytics from "../components/admin-dashboard/Analytics";
 import "../styles/AdminDashboard.css";
 import SideNavBar from "../layout/SideNavBar";
 import type { View } from "../types/AdminDashboard.interface";
-import AccountManagment from "../components/admin-dashboard/AccountManagement";
+import AccountManagement from "../components/admin-dashboard/AccountManagement";
+import InventoryManagement from "../components/admin-dashboard/inventory-management/InventoryManagement";
 
 const AdminDashboard: React.FC = () => {
   const [view, setView] = useState<View>("Analytics");
@@ -13,7 +14,11 @@ const AdminDashboard: React.FC = () => {
     if (view === "Analytics") {
       setContent(<Analytics />);
     } else if (view === "Account Management") {
-      setContent(<AccountManagment />);
+      setContent(<AccountManagement />);
+    } else if (view === "Class Management") {
+      // TODO:  setContent(inset class management component)
+    } else if (view === "Inventory Management") {
+      setContent(<InventoryManagement />);
     }
   }, [view]);
 

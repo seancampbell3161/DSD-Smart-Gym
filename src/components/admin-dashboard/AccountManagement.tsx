@@ -1,4 +1,4 @@
-const AccountManagment: React.FC = () => {
+const AccountManagement: React.FC = () => {
   return <></>;
 };
-export default AccountManagment;
+export default AccountManagement;
