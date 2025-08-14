@@ -42,22 +42,7 @@ const nonMemberNav = [
 
 const adminNav = [{ label: "Dashboard", to: "/admin/dashboard" }];
 
-const AppContent: React.FC = () => {
-// ------- Auth helpers -------
-const isAuthed = () => !!localStorage.getItem("authToken");
-const getRole = () => (localStorage.getItem("role") || "").toLowerCase();
-const isAdminOrTrainer = () => {
-  const role = getRole();
-  return role === "admin" || role === "trainer";
-};
-
-// ------- Route Guards -------
-function RequireAuth({ children }: { children: React.ReactNode }) {
-  return isAuthed() ? <>{children}</> : <Navigate to="/" replace />;
-}
-function RequireAdminOrTrainer({ children }: { children: React.ReactNode }) {
-  return isAdminOrTrainer() ? <>{children}</> : <Navigate to="/member" replace />;
-}
+export default function App() {
 
   return (
     <>
@@ -107,23 +92,26 @@ function RequireAdminOrTrainer({ children }: { children: React.ReactNode }) {
         <Route path="/cafe" element={<Navigate to="/member/cafe-ordering" replace />} />
 
         {/* ---------- Admin / Trainer ---------- */}
-        <Route
-          path="/admin/dashboard"
-          element={
-            <RequireAdminOrTrainer>
-              <AdminDashboard />
-            </RequireAdminOrTrainer>
-          }
-        />
-        <Route
-          path="/admin/classes"
-          element={
-            <RequireAdminOrTrainer>
-              <AdminClasses />
-            </RequireAdminOrTrainer>
-          }
-        />
+        <Route element={<NonMemberLayout navItems={adminNav} />} >
+          <Route
+            path="/admin/dashboard"
+            element={
+              <RequireAdminOrTrainer>
+                <AdminDashboard />
+              </RequireAdminOrTrainer>
+            }
+          />
+        </Route>
 
+          <Route
+            path="/admin/classes"
+            element={
+              <RequireAdminOrTrainer>
+                <AdminClasses />
+              </RequireAdminOrTrainer>
+            }
+          />
+          
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
@@ -133,4 +121,3 @@ function RequireAdminOrTrainer({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default AppContent

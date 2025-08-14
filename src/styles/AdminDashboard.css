@@ -22,7 +22,17 @@
   row-gap: 40px;
 }
 
-.admin-layout-main {
-  transform: translateX(6.5%);
+.admin-dashboard-body {
+  transform: translateX(4%);
   justify-items: center;
+}
+
+.admin-classes-view > .admin-dashboard-body > .admin-dashboard-main {
+  transform: scale(0.82) translateX(45px) translateY(-180px);
+  border-radius: 5%;
+}
+
+.admin-classes-view > .admin-dashboard-body > .admin-dashboard-main > div {
+  border-radius: 5%;
+  border: 20px solid #6e6e6e;
 }

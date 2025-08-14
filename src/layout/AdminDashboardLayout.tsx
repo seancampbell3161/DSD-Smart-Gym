@@ -9,9 +9,9 @@ const AdminDashboardLayout: React.FC<AdminDashboardProps> = ({
 }) => {
   return (
     <>
-      <div className="admin-layout-main">
+      <div className="admin-dashboard-body">
         <h2 className="dashboard-header">Dashboard</h2>
-        {main}
+        <div className="admin-dashboard-main">{main}</div>
       </div>
       {sideBar}
     </>
