@@ -1,118 +1,163 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const API_BASE_URL = import.meta.env.VITE_API_URL;
+// src/utils/ApiHandler.ts
 
-type Headers = {
-  [key: string]: string;
-};
 
-const getAuthHeader = (): Headers => {
-  const token = localStorage.getItem("token");
+type HeadersMap = { [key: string]: string };
+
+const getStoredToken = () =>
+  localStorage.getItem("authToken") || localStorage.getItem("token");
+
+const getAuthHeader = (): HeadersMap => {
+  const token = getStoredToken();
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-// ✅ Improved error handling to avoid crashing on non-JSON responses
+const join = (base: string, endpoint: string) =>
+  `${base}${endpoint.startsWith("/") ? "" : "/"}${endpoint}`;
+
+// Unified response handler (handles 204, JSON, or text)
 const handleResponse = async (res: Response) => {
-  const contentType = res.headers.get("content-type");
+  if (res.status === 204) return { ok: true };
+
+  const contentType = res.headers.get("content-type") || "";
+  const parseBody = async () => {
+    if (contentType.includes("application/json")) return res.json();
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch {
+      return text;
+    }
+  };
+
+  const body = await parseBody();
 
   if (!res.ok) {
-    if (contentType && contentType.includes("application/json")) {
-      const data = await res.json();
-      throw new Error(data.error || data.message || "An error occurred");
-    } else {
-      const text = await res.text();
-      throw new Error(`❌ Server returned non-JSON error: ${text}`);
+    if (body && typeof body === "object") {
+      throw new Error((body as any).error || (body as any).message || `HTTP ${res.status}`);
     }
+    throw new Error(`HTTP ${res.status}: ${String(body)}`);
   }
 
-  if (contentType && contentType.includes("application/json")) {
-    return res.json();
-  } else {
-    return res.text(); // fallback if response is plain text or HTML
-  }
+  return body ?? { ok: true };
 };
 
 const ApiHandler = {
   async get(endpoint: string) {
-    const url = `${API_BASE_URL}${endpoint}`;
-    console.log("📤 GET:", url);
-
+    const url = join(API_BASE_URL, endpoint);
     const res = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         ...getAuthHeader(),
       },
+      credentials: "include",
     });
     return handleResponse(res);
   },
 
   async post(endpoint: string, body: any) {
-    const url = `${API_BASE_URL}${endpoint}`;
-    console.log("📤 POST:", url, body);
-
+    const url = join(API_BASE_URL, endpoint);
     const res = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         ...getAuthHeader(),
       },
+      credentials: "include",
       body: JSON.stringify(body),
     });
     return handleResponse(res);
   },
 
   async put(endpoint: string, body: any) {
-    const url = `${API_BASE_URL}${endpoint}`;
-    console.log("📤 PUT:", url, body);
-
+    const url = join(API_BASE_URL, endpoint);
     const res = await fetch(url, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         ...getAuthHeader(),
       },
+      credentials: "include",
       body: JSON.stringify(body),
     });
     return handleResponse(res);
   },
 
   async delete(endpoint: string) {
-    const url = `${API_BASE_URL}${endpoint}`;
-    console.log("📤 DELETE:", url);
-
+    const url = join(API_BASE_URL, endpoint);
     const res = await fetch(url, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         ...getAuthHeader(),
       },
+      credentials: "include",
     });
     return handleResponse(res);
   },
 
+  // ---- Auth ----
   async login(email: string, password: string) {
-    const loginUrl = `${API_BASE_URL}/users/login`;
-    console.log("🔐 Login URL:", loginUrl);
-
+    const loginUrl = join(API_BASE_URL, "/users/login");
     const res = await fetch(loginUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
+      credentials: "include",
     });
 
-    const text = await res.text();
-    console.log("🧾 Raw login response:", text);
+    const payload = await handleResponse(res);
 
-    try {
-      const data = JSON.parse(text);
+    const authToken =
+      (payload as any)?.authToken ??
+      (payload as any)?.token ??
+      null;
 
-      if (data.authToken) localStorage.setItem("token", data.authToken);
-      if (data.gym_id) localStorage.setItem("gym_id", data.gym_id);
+    const emailOut = (payload as any)?.email ?? (payload as any)?.user?.email ?? "";
 
-      return data;
-    } catch (err) {
-      throw new Error("❌ Failed to parse login response as JSON.");
-    }
+    const roleRaw = (payload as any)?.role ?? (payload as any)?.user?.role ?? "";
+    const roleOut = typeof roleRaw === "string" ? roleRaw.toLowerCase() : "";
+
+    const gymIdOut = (payload as any)?.gym_id ?? (payload as any)?.user?.gym_id ?? "";
+
+    if (!authToken) throw new Error("Login succeeded but no authToken returned.");
+
+    localStorage.setItem("authToken", authToken);
+    localStorage.setItem("token", authToken);
+    if (emailOut) localStorage.setItem("email", emailOut);
+    if (roleOut) localStorage.setItem("role", roleOut);
+    if (gymIdOut) localStorage.setItem("gym_id", gymIdOut);
+
+    return payload;
+  },
+
+  // ---- Classes (Admin) ----
+  async getAdminClasses() {
+    const gym_id = localStorage.getItem("gym_id") || "";
+    const res = await this.get(`/classes?gym_id=${encodeURIComponent(gym_id)}`);
+    return Array.isArray(res) ? res : res?.data ?? res?.allClasses ?? [];
+  },
+
+  async createClass(payload: any) {
+    return this.post("/classes", payload);
+  },
+
+  async updateClass(id: string, payload: any) {
+    return this.put(`/classes/${id}`, payload);
+  },
+
+  async cancelClass(id: string, reason?: string) {
+    return this.put(`/classes/${id}/cancel`, { reason: reason ?? "" });
+  },
+
+  async uncancelClass(id: string) {
+    return this.put(`/classes/${id}/uncancel`, {});
+  },
+
+  async deleteClass(id: string) {
+    return this.delete(`/classes/${id}`);
   },
 };
 

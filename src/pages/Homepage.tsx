@@ -13,13 +13,12 @@ import ApiHandler from "../utils/ApiHandler";
 
 type UserRole = "admin" | "member" | "trainer";
 
-interface LoginResponse {
+interface LoginResponseLegacy {
   authToken: string;
-  user?: {
-    email: string;           
-    role: UserRole;
-    gym_id?: string;
-  };
+  user?: { email: string; role: UserRole; gym_id?: string };
+  email?: string;
+  role?: UserRole;
+  gym_id?: string;
 }
 
 const Homepage: React.FC = () => {
@@ -35,20 +34,17 @@ const Homepage: React.FC = () => {
     setLoading(true);
 
     try {
-      // Backend should return: { authToken, user: { email, role, gym_id? } }
-      const data = (await ApiHandler.login(email, password)) as LoginResponse;
+      const data = (await ApiHandler.login(email, password)) as LoginResponseLegacy;
 
       const token = data?.authToken;
-      const role = data?.user?.role;
-      const userEmail = data?.user?.email;
-      const gym_id = data?.user?.gym_id;
+      const roleRaw: UserRole | undefined = data?.user?.role ?? (data?.role as UserRole | undefined);
+      const role = (roleRaw as string | undefined)?.toLowerCase() as UserRole | undefined;
+      const userEmail = data?.user?.email ?? data?.email;
+      const gym_id = data?.user?.gym_id ?? data?.gym_id;
 
-      if (!token || !role || !userEmail) {
-        throw new Error("Missing fields from server (authToken, user.email, user.role).");
-      }
+      if (!token || !role || !userEmail) throw new Error("Missing fields from server (authToken, email, role).");
 
-  
-      localStorage.setItem("token", token);
+      localStorage.setItem("authToken", token);
       localStorage.setItem("role", role);
       localStorage.setItem("email", userEmail);
       if (gym_id) localStorage.setItem("gym_id", String(gym_id));
@@ -57,8 +53,12 @@ const Homepage: React.FC = () => {
       setEmail("");
       setPassword("");
 
-      
-      navigate(role === "admin" ? "/admin" : "/member", { replace: true });
+      // Updated: navigate to routes that actually exist
+      if (role === "admin" || role === "trainer") {
+        navigate("/admin/dashboard", { replace: true });
+      } else {
+        navigate("/member", { replace: true });
+      }
     } catch (err: any) {
       console.error("Login error:", err);
       setMessage(`❌ Login failed: ${err?.message || "Unknown error"}`);
@@ -119,25 +119,19 @@ const Homepage: React.FC = () => {
         <div>
           <img alt="two guys exercising" src={workoutImage} />
           <h3>Insights That Power Performance.</h3>
-          <p>
-            Turn data into deeper engagement. Our analytics help you create a gym experience that feels personal and community-driven.
-          </p>
+          <p>Turn data into deeper engagement. Our analytics help you create a gym experience that feels personal and community-driven.</p>
         </div>
 
         <div>
           <img alt="boxing class" src={boxingImage} />
           <h3>Sweat Together. Get Stronger.</h3>
-          <p>
-            Getting fit the smart way. Our intuitive class management makes it easy for members to build a routine that works for them.
-          </p>
+          <p>Getting fit the smart way. Our intuitive class management makes it easy for members to build a routine that works for them.</p>
         </div>
 
         <div>
           <img alt="transaction taking place" src={posImage} />
           <h3>Fast Checkouts. Smarter Business.</h3>
-          <p>
-            Streamline sales with a smart, built-in POS system—manage café orders, track inventory, and process payments effortlessly, all from one place.
-          </p>
+          <p>Streamline sales with a smart, built-in POS system—manage café orders, track inventory, and process payments effortlessly, all from one place.</p>
         </div>
       </div>
     </div>
