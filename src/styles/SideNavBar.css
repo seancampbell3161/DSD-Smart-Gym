@@ -1,0 +1,42 @@
+.side-nav-bar {
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  z-index: 1;
+  top: 80px;
+  left: 0;
+  background-color: #535552;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.side-nav-bar ul {
+  padding: 6px 6px 6px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #b6b6b6;
+  display: block;
+  list-style: none;
+}
+
+.side-nav-bar li {
+  margin: 20px 5px;
+}
+
+.side-nav-bar ul:hover {
+  color: #f1f1f1;
+}
+
+.side-nav-bar ul > .selected {
+  background-color: inherit;
+  color: var(--lime-accent);
+}
+
+@media screen and (max-height: 450px) {
+  .side-nav-bar {
+    padding-top: 15px;
+  }
+  .side-nav-ber ul {
+    font-size: 18px;
+  }
+}

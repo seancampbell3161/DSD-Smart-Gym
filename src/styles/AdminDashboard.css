@@ -4,6 +4,8 @@
   padding-top: 110px;
   top: 0;
   background-color: #bcfd4c;
+  display: flex;
+  justify-content: center;
 }
 
 .dashboard-header {
@@ -21,4 +23,8 @@
   align-items: center;
   justify-content: center;
   row-gap: 40px;
+}
+
+.admin-layout-main {
+  transform: translateX(8%);
 }

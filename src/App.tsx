@@ -23,6 +23,8 @@ const nonMemberNav = [
   { label: "Classes", to: "/nonmember/classes" }
 ];
 
+const adminNav = [{ label: "Dashboard", to: "/admin" }];
+
 const AppContent: React.FC = () => {
   return (
     <>
@@ -83,7 +85,14 @@ const AppContent: React.FC = () => {
         />
 
         {/* Admin Dashboard */}
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route
+          path="/admin"
+          element={
+            <NonMemberLayout navItems={adminNav}>
+              <AdminDashboard />
+            </NonMemberLayout>
+          }
+        />
       </Routes>
 
       <Footer />
