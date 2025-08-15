@@ -8,7 +8,6 @@ interface SideNavBarProps {
 const SideNavBar: React.FC<SideNavBarProps> = ({ view, setView }) => {
   const psuedoLinks = [
     "Analytics",
-    "Account Management",
     "Class Management",
     "Inventory Management",
   ];
