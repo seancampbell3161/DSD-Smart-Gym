@@ -27,9 +27,14 @@
   justify-items: center;
 }
 
+.admin-dashboard-main {
+  transform: scale(.82) translateX(80px) translateY(-180px);
+}
+
 .admin-classes-view > .admin-dashboard-body > .admin-dashboard-main {
-  transform: scale(0.82) translateX(45px) translateY(-180px);
+  transform: scale(0.72) translateX(80px) translateY(-220px);
   border-radius: 5%;
+  box-shadow: rgba(0, 0, 0, 0.568) 0px 5px 100px;
 }
 
 .admin-classes-view > .admin-dashboard-body > .admin-dashboard-main > div {

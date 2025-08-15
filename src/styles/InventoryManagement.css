@@ -2,4 +2,6 @@
   border-radius: 20px;
   overflow: hidden;
   margin-bottom: 20px;
+  transform: scale(.95) translateY(160px);
+  box-shadow: rgba(0, 0, 0, 0.568) 0px 5px 100px;
 }
