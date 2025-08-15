@@ -40,7 +40,10 @@ const nonMemberNav = [
   { label: "Classes", to: "/nonmember/classes" },
 ];
 
+const adminNav = [{ label: "Dashboard", to: "/admin/dashboard" }];
+
 export default function App() {
+
   return (
     <>
       <Routes>
@@ -89,23 +92,26 @@ export default function App() {
         <Route path="/cafe" element={<Navigate to="/member/cafe-ordering" replace />} />
 
         {/* ---------- Admin / Trainer ---------- */}
-        <Route
-          path="/admin/dashboard"
-          element={
-            <RequireAdminOrTrainer>
-              <AdminDashboard />
-            </RequireAdminOrTrainer>
-          }
-        />
-        <Route
-          path="/admin/classes"
-          element={
-            <RequireAdminOrTrainer>
-              <AdminClasses />
-            </RequireAdminOrTrainer>
-          }
-        />
+        <Route element={<NonMemberLayout navItems={adminNav} />} >
+          <Route
+            path="/admin/dashboard"
+            element={
+              <RequireAdminOrTrainer>
+                <AdminDashboard />
+              </RequireAdminOrTrainer>
+            }
+          />
+        </Route>
 
+          <Route
+            path="/admin/classes"
+            element={
+              <RequireAdminOrTrainer>
+                <AdminClasses />
+              </RequireAdminOrTrainer>
+            }
+          />
+          
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
@@ -114,3 +120,4 @@ export default function App() {
     </>
   );
 }
+

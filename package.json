@@ -10,13 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@clerk/clerk-react": "^5.35.3",
     "@fullcalendar/core": "^6.1.18",
     "@fullcalendar/daygrid": "^6.1.18",
     "@fullcalendar/react": "^6.1.18",
     "@stripe/stripe-js": "^7.8.0",
     "ag-grid-community": "^34.1.0",
     "ag-grid-react": "^34.1.0",
+    "ag-grid-react": "^34.1.1",
     "bootstrap": "^5.3.7",
     "date-fns": "^4.1.0",
     "qrcode.react": "^4.2.0",
