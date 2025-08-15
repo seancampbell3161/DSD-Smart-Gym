@@ -3,13 +3,13 @@ import ApiHandler from "../../../utils/ApiHandler";
 import { format } from "date-fns";
 import { AgGridReact } from "ag-grid-react";
 import {
-  _getHeaderCheckbox,
   AllCommunityModule,
   themeAlpine,
   ModuleRegistry,
-  type ColDef,
   type GridOptions,
   type SizeColumnsToFitGridStrategy,
+  iconSetQuartz,
+  type ColGroupDef,
 } from "ag-grid-community";
 ModuleRegistry.registerModules([AllCommunityModule]);
 import "../../../styles/InventoryManagement.css";
@@ -23,33 +23,58 @@ interface InventoryItem {
   updatedAt: string;
 }
 
+const CustomHeader: React.FC = () => {
+  return (
+    <div
+      className="inventory-header-container"
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        gap: "8px",
+        width: "inherit",
+      }}
+    >
+      <h3 style={{ paddingTop: 40, paddingBottom: 30 }}>Cafe Inventory</h3>
+    </div>
+  );
+};
+
 const InventoryManagement: React.FC = () => {
   const [items, setItems] = useState<InventoryItem[]>([]);
-  const [colDefs, setColDefs] = useState<ColDef[]>([
-    { field: "_id", headerName: "ID", colId: "ID" },
-    { field: "item_name", headerName: "Item Name" },
+  const colDefs: ColGroupDef[] = [
     {
-      field: "price",
-      headerName: "Price",
-      valueFormatter: (p) =>
-        p.value.toLocaleString("en-US", { style: "currency", currency: "USD" }),
-      colId: "Price",
+      headerName: "Cafe Inventory",
+      headerGroupComponent: CustomHeader,
+      children: [
+        { field: "_id", headerName: "ID", colId: "ID" },
+        { field: "item_name", headerName: "Item Name" },
+        {
+          field: "price",
+          headerName: "Price",
+          valueFormatter: (p) =>
+            p.value.toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD",
+            }),
+          colId: "Price",
+        },
+        { field: "quantity", headerName: "Quantity", colId: "Quantity" },
+        {
+          field: "createdAt",
+          headerName: "Date Added (YYYY-MM-DD)",
+          valueFormatter: (p) => format(p.value, "yyyy-MM-dd HH:mm:ss"),
+        },
+        {
+          field: "updatedAt",
+          headerName: "Last Updated (YYYY-MM-DD)",
+          valueFormatter: (p) => format(p.value, "yyyy-MM-dd HH:mm:ss"),
+        },
+      ],
     },
-    { field: "quantity", headerName: "Quantity", colId: "Quantity" },
-    {
-      field: "createdAt",
-      headerName: "Date Added (YYYY-MM-DD)",
-      valueFormatter: (p) => format(p.value, "yyyy-MM-dd HH:mm:ss"),
-    },
-    {
-      field: "updatedAt",
-      headerName: "Last Updated (YYYY-MM-DD)",
-      valueFormatter: (p) => format(p.value, "yyyy-MM-dd HH:mm:ss"),
-    },
-  ]);
+  ];
 
   const rowSelection: GridOptions["rowSelection"] = useMemo(() => {
-    return { mode: "multiRow", _getHeaderCheckbox };
+    return { mode: "multiRow" };
   }, []);
 
   const autoSizeStrategy: SizeColumnsToFitGridStrategy = useMemo(() => {
@@ -72,7 +97,7 @@ const InventoryManagement: React.FC = () => {
     };
   }, []);
 
-  const myTheme = themeAlpine.withParams({
+  const myTheme = themeAlpine.withPart(iconSetQuartz).withParams({
     selectedRowBackgroundColor: "#11ff7029",
   });
 
