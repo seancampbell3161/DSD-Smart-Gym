@@ -7,7 +7,7 @@ It streamlines member check-ins through QR codes, integrates a cashless café or
 
 On the business side, it equips administrators with tools for inventory control and automated analytics to track membership growth, class attendance, and peak usage hours.
 
-By reducing manual overhead and providing actionable insights, the app empowers gyms to operate more efficiently, make data-driven decisions, and deliver a seamless, user-friendly experience for members.
+By reducing manual overhead and providing actionable insights, the app enables gyms to operate more efficiently, make informed data-driven decisions, and deliver a seamless, user-friendly experience for their members.
 
 ✨ Features
 
@@ -112,7 +112,7 @@ npm run dev
 
 Once both servers are running, open your browser at:
 
-http://localhost:3000
+http://localhost:5173
 
 💻 Usage
 
@@ -139,7 +139,7 @@ Open a Pull Request
 🚀 Deployment
 
 The Smart Gym App is deployed on Render.
-🔗 Live Demo
+🔗 (https://dsd-smart-gym.onrender.com/) [Live Demo]
 
 👥 Contributors
 
